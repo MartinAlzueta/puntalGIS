@@ -12,7 +12,8 @@
   "dependencies": {
     "@mapcomponents/react-maplibre": "^0.1.80",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "turf": "^3.0.14"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
