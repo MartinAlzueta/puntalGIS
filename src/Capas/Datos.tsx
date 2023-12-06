@@ -5,6 +5,7 @@ import {
   useMap,
   MlGeoJsonLayer,
   TopToolbar,
+  MlLayer,
 } from "@mapcomponents/react-maplibre";
 import recorridas from "./test/respuestaPrueba.json";
 import createGeojson from "../contexto/createGeojson";
@@ -112,6 +113,19 @@ export default function Datos() {
         }
         paint={{"fill-color": fillColor() as string }}
       />
+
+      <MlLayer 
+      geojson={filteredGeojson
+        ? filteredGeojson
+        : (geojson as FeatureCollection<GeometryCollection, Properties>)}
+      options={{
+        type: 'symbol',
+        layout: {'text-field': ["get", "plot_name"], 'text-font': ['Metropolis Regular']},
+        paint: {'text-color': "#000"}
+      }}
+      />
+      
+
       <TopToolbar
         unmovableButtons={
           <>
@@ -144,3 +158,5 @@ export default function Datos() {
     </>
   );
 }
+
+
