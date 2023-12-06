@@ -37,6 +37,10 @@ export default function Datos() {
   const [lote, setLote] = useState<string>();
   const [semaforo, setSemaforo] = useState<string>();
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
+  const [selectedFeature, setSelectedFeature] = useState<any>();
+
+  console.log(selectedFeature?.properties)
+
 
   const listaLotes = () => {
     const array: string[] = [];
@@ -112,6 +116,7 @@ export default function Datos() {
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
         paint={{"fill-color": fillColor() as string }}
+        onClick={(ev)=>setSelectedFeature(ev.features[0])}
       />
 
       <MlLayer 
