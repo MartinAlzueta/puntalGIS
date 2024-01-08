@@ -16,6 +16,7 @@ import {
   Properties,
 } from "@turf/turf";
 import { InputLabel, Select, MenuItem } from "@mui/material";
+import DisplayInfos from "./DisplayInfo";
 
 interface queryParamsType {
   scout?: string;
@@ -25,12 +26,11 @@ interface queryParamsType {
 }
 
 const semaforos = [
-  {label: "ninguno" , field: "ninguno"},
-  {label: "enfermedad" , field: "disease_semaphore"},
-  {label:  "peste" , field: "pest_semaphore"},
-  {label: "maleza" , field: "weed_semaphore"},
-  {label: "adversidad" , field: "adversity_semaphore"},
-  
+  { label: "ninguno", field: "ninguno" },
+  { label: "enfermedad", field: "disease_semaphore" },
+  { label: "peste", field: "pest_semaphore" },
+  { label: "maleza", field: "weed_semaphore" },
+  { label: "adversidad", field: "adversity_semaphore" },
 ];
 
 export default function Datos() {
@@ -48,6 +48,7 @@ export default function Datos() {
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const [ultimaRecorrida, setUltimaRecorrida] = useState<any>();
   const contexto = useContext(APIContext) as any;
+  
 
   const fillColor = () => {
     if (semaforo) {
@@ -77,6 +78,16 @@ export default function Datos() {
     });
     array.push({ name: "todos", id: 0 });
     return array;
+  };
+
+  const getQueryParams = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const params = {};
+    for (let [key, value] of searchParams.entries()) {
+      params[key] = value;
+    }
+
+    return params;
   };
 
   // useEffect(() => {
@@ -121,20 +132,8 @@ export default function Datos() {
   }, [lote]);
 
   //Read query parameters
-
   useEffect(() => {
-    const getQueryParams = () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const params = {};
-      for (let [key, value] of searchParams.entries()) {
-        params[key] = value;
-      }
-
-      return params;
-    };
-    //
     const params: queryParamsType = getQueryParams();
-    console.log(params);
     params.scout && setSemaforo(params.scout);
     params.plot_id && setLote(params.plot_id);
   }, []);
@@ -149,7 +148,11 @@ export default function Datos() {
         }
         layerId="data_layer"
         paint={{ "fill-color": fillColor() as string }}
-        //onClick={(ev) =>{ setSelectedFeature(ev.features[0]); console.log(ev)}}
+        onClick={(ev: any) => {          
+          setSelectedFeature(ev.features[0]);
+          setLote(ev.features[0].properties.plot_id)
+          
+        }}
       />
 
       <MlLayer
@@ -172,14 +175,19 @@ export default function Datos() {
         unmovableButtons={
           <>
             <InputLabel>Lote</InputLabel>
-            <Select            
+            <Select
               id="plot_name"
               label="lote"
               value={lote}
               onChange={(ev) => setLote(ev.target.value as number)}
             >
               {listaLotes().map((el) => {
-                return <MenuItem key={el.id} value={el.id}> {el.name}</MenuItem>;
+                return (
+                  <MenuItem key={el.id} value={el.id}>
+                    {" "}
+                    {el.name}
+                  </MenuItem>
+                );
               })}
             </Select>
 
@@ -187,16 +195,22 @@ export default function Datos() {
             <Select
               id="semaforos"
               label="semaforos"
-              value={semaforo}        
+              value={semaforo}
               onChange={(ev) => setSemaforo(ev.target.value as string)}
             >
               {semaforos.map((el) => {
-                return <MenuItem key={el.label} value={el.field}> {el.label}</MenuItem>;
+                return (
+                  <MenuItem key={el.label} value={el.field}>                   
+                    {el.label}
+                  </MenuItem>
+                );
               })}
             </Select>
+          
           </>
         }
       />
+     {selectedFeature && <DisplayInfos feature={selectedFeature} open={true} closeHandler={()=>{setSelectedFeature(undefined); setLote(0)} } />}
     </>
   );
 }
