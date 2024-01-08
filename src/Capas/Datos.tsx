@@ -25,11 +25,12 @@ interface queryParamsType {
 }
 
 const semaforos = [
-  "ninguno",
-  "disease_semaphore",
-  "pest_semaphore",
-  "weed_semaphore",
-  "adversity_semaphore",
+  {label: "ninguno" , field: "ninguno"},
+  {label: "enfermedad" , field: "disease_semaphore"},
+  {label:  "peste" , field: "pest_semaphore"},
+  {label: "maleza" , field: "weed_semaphore"},
+  {label: "adversidad" , field: "adversity_semaphore"},
+  
 ];
 
 export default function Datos() {
@@ -42,14 +43,11 @@ export default function Datos() {
   );
   //variables seleccionadas
   const [lote, setLote] = useState<number>(0);
-  const [semaforo, setSemaforo] = useState<string>(semaforos[0]);
+  const [semaforo, setSemaforo] = useState<string>(semaforos[0].field);
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const [ultimaRecorrida, setUltimaRecorrida] = useState<any>();
-
   const contexto = useContext(APIContext) as any;
-
-  console.log(lote);
 
   const fillColor = () => {
     if (semaforo) {
@@ -174,27 +172,26 @@ export default function Datos() {
         unmovableButtons={
           <>
             <InputLabel>Lote</InputLabel>
-            <Select
-              labelId="lote"
+            <Select            
               id="plot_name"
               label="lote"
+              value={lote}
               onChange={(ev) => setLote(ev.target.value as number)}
             >
               {listaLotes().map((el) => {
-                return <MenuItem value={el.id}> {el.name}</MenuItem>;
+                return <MenuItem key={el.id} value={el.id}> {el.name}</MenuItem>;
               })}
             </Select>
 
             <InputLabel>Semaforos</InputLabel>
             <Select
-              labelId="semaforos"
               id="semaforos"
               label="semaforos"
-              value={semaforo}
+              value={semaforo}        
               onChange={(ev) => setSemaforo(ev.target.value as string)}
             >
               {semaforos.map((el) => {
-                return <MenuItem value={el}> {el}</MenuItem>;
+                return <MenuItem key={el.label} value={el.field}> {el.label}</MenuItem>;
               })}
             </Select>
           </>
