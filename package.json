@@ -13,6 +13,7 @@
     "@mapcomponents/react-maplibre": "^0.1.80",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
     "turf": "^3.0.14"
   },
   "devDependencies": {

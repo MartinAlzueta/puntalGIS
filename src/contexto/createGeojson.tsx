@@ -31,7 +31,7 @@ export default function createGeojson(
       type: "Feature",
       id: idx,
       properties: element,
-      geometry: lote[0].geometry,
+      geometry: lote[0]?.geometry,
     };
     geojson.features
       ? geojson.features.push(newFeature)

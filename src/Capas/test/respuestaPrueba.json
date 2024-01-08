@@ -67,7 +67,7 @@
     "scoutter": "jlbonnin@puntalagro.com",
     "disease_semaphore": 2,
     "disease_decision": "Intervenir",
-    "pest_semaphore": 0,
+    "pest_semaphore": 2,
     "pest_decision": null,
     "weed_semaphore": 0,
     "weed_decision": null,

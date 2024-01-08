@@ -1,18 +1,19 @@
 import React from "react";
-import test from '../Capas/test/respuestaPrueba.json'
 
 const APIContext = React.createContext({});
 const APIStateProvider = APIContext.Provider;
 //TODO: definicion de TS para el contexto
 const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
 
-  const testData = test;
-  const farm_id = 267;
     
   //Funcion para pedir los datos de recorridas a la api
   function getRecorridas(callback: (data: JSON) => void) {
-    fetch('http://158.69.146.130:3001/api/map/getAllScouts/' + farm_id)
+    fetch('http://158.69.146.130:3001/api/map/getFarmState/35/2023-11-11')
       .then(function (response) {
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         return response.json();
       })
       .then(function (json) {
@@ -21,8 +22,8 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
     //Funcion para pedir los datos de recorridas a la api
-  function getLotes(callback: (data: JSON) => void) {
-    fetch('http://158.69.146.130:3001/api/map/getXXXXX' + farm_id )
+  function getLotes(params: {scout_id: number}, callback: (data: JSON) => void) {
+    fetch('http://158.69.146.130:3001/api/map/getXXXXX' + params.scout_id )
       .then(function (response) {
         return response.json();
       })
@@ -32,9 +33,8 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const stateProviderValue = {
-    //getRecorridas,
-    //getLotes,
-testData
+    getRecorridas  
+    
   };
 
   return (
