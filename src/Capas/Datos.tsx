@@ -37,10 +37,7 @@ export default function Datos() {
   //const [datos, setDatos] = useState();
   //const contexto = useContext(APIContext) as any;
   const mapHook = useMap();
-  const geojson = createGeojson(
-    respuestaUltimaRecorrida.data,
-    lotes as unknown as FeatureCollection
-  );
+
   //variables seleccionadas
   const [lote, setLote] = useState<number>(0);
   const [semaforo, setSemaforo] = useState<string>(semaforos[0].field);
@@ -48,7 +45,7 @@ export default function Datos() {
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const [ultimaRecorrida, setUltimaRecorrida] = useState<any>();
   const contexto = useContext(APIContext) as any;
-  
+  const [geojson, setGeoJson] = useState<any>(); 
 
   const fillColor = () => {
     if (semaforo) {
@@ -90,9 +87,16 @@ export default function Datos() {
     return params;
   };
 
-  // useEffect(() => {
-  //       contexto.getRecorridas((data)=>setUltimaRecorrida(data));
-  // }, []);
+  useEffect(() => {
+        contexto.getRecorridas((data)=>setUltimaRecorrida(data));
+  }, []);
+
+useEffect(()=>{
+  ultimaRecorrida && setGeoJson(createGeojson(
+    ultimaRecorrida,
+    lotes as unknown as FeatureCollection
+  ));
+},[ultimaRecorrida])
 
   useEffect(() => {
     lotes.bbox &&
@@ -105,7 +109,8 @@ export default function Datos() {
       mapHook.map?.fitBounds(newBox as [number, number, number, number], {
         padding: { top: 150, bottom: 175, left: 135, right: 135 },
       });
-    } else {
+    } 
+    if(typeof filteredGeojson === "undefined" && typeof geojson !== "undefined") {
       const newBox = bbox(geojson);
       mapHook.map?.fitBounds(newBox as [number, number, number, number], {
         padding: { top: 150, bottom: 175, left: 135, right: 135 },
@@ -129,7 +134,7 @@ export default function Datos() {
           };
         });
     }
-  }, [lote]);
+  }, [lote, geojson]);
 
   //Read query parameters
   useEffect(() => {
@@ -181,7 +186,7 @@ export default function Datos() {
               value={lote}
               onChange={(ev) => setLote(ev.target.value as number)}
             >
-              {listaLotes().map((el) => {
+              {geojson && listaLotes().map((el) => {
                 return (
                   <MenuItem key={el.id} value={el.id}>
                     {" "}

@@ -37,6 +37,6 @@ export default function createGeojson(
       ? geojson.features.push(newFeature)
       : (geojson.features = [newFeature]);
   });
-
+console.log(geojson)
   return geojson;
 }
