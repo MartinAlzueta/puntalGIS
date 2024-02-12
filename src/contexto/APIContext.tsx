@@ -10,7 +10,7 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
   function getRecorridas(callback: (data: JSON) => void) {
     fetch('http://158.69.146.130:3001/api/map/getFarmState/35/2023-11-11')
       .then(function (response) {
-        console.log(response)
+        
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

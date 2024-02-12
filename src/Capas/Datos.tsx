@@ -51,7 +51,7 @@ export default function Datos() {
     if (semaforo) {
       return [
         "match",
-        ["get", semaforo],
+        ["get", "last_scout"],
         0,
         "#96ceb4",
         1,

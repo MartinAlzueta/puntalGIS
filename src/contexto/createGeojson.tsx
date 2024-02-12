@@ -37,6 +37,12 @@ export default function createGeojson(
       ? geojson.features.push(newFeature)
       : (geojson.features = [newFeature]);
   });
-console.log(geojson)
+
+  geojson.features?.forEach(feature => {
+    feature.properties?.last_scout && Object.keys(feature.properties.last_scout).forEach((key)=>{
+      key !== "id" && (feature.properties[key] =  feature.properties?.last_scout.semaphore)
+    })
+  });
+    console.log(geojson)
   return geojson;
 }
