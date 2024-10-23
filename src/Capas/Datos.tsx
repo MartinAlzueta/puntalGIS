@@ -14,9 +14,9 @@ import {
   GeometryCollection,
   Properties,
 } from "@turf/turf";
-import { InputLabel, Select, MenuItem } from "@mui/material";
+import { InputLabel, Select, MenuItem, Switch } from "@mui/material";
 import DisplayInfos from "./DisplayInfo";
-import { validQueryParams} from "../utils/utils.js";
+import { validQueryParams } from "../utils/utils.js";
 
 interface queryParamsType {
   scout?: string;
@@ -48,51 +48,41 @@ export default function Datos() {
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const contexto = useContext(APIContext) as any;
-  const [geojson, setGeoJson] = useState<any>(); 
-
+  const [geojson, setGeoJson] = useState<any>();
 
   const fillColor = () => {
     if (semaforo && semaforo != "ninguno") {
-        return [
-          "case",
-          // Condition: Check if "semaphore" exists in the semaforo object
-          ["has", "semaphore", ["get", semaforo]],
-          
-          // If "semaphore" exists, use the corresponding semaphore value to return a color
-          [
-            "match",
-            ["get", "semaphore", ["get", semaforo]], // Get the semaphore value
-            -1, "#999999",
-            0, "#96ceb4",  // Color for 0
-            1, "#ffffba",  // Color for 1
-            2, "#ff3030",  // Color for 2
-            "#6D0606"      // Default color if the value is not 0, 1, or 2
-          ],
-      
-          // Fallback if "semaphore" does not exist or is undefined
-          "#6D0606"
-        ];
-      }  else {
-    return "rgba(0, 0, 255, 0.1)"
-      }
- 
+      return [
+        "match",
+        ["get", "semaphore", ["get", semaforo]],
+        -1,
+        "rgba(153, 153, 153, 0.7)",
+        0,
+        "rgba(150, 206, 180, 0.7)", 
+        1,
+        "rgba(255, 255, 186, 0.7)", 
+        2,
+        "rgba(255, 48, 48, 0.7)", 
+        "rgba(109, 6, 6, 0.8)",
+      ];
+    } else {
+      return "rgba(21, 141, 189, 0.2)";
+    }
   };
-
 
   const listaLotes = () => {
     const array: any[] = [];
     if (campo) {
       campo.plots?.forEach((el) => {
-          array.push({
-            name: el.name,
-            id: el.id,
-          });
+        array.push({
+          name: el.name,
+          id: el.id,
+        });
       });
-    } 
+    }
     array.push({ name: "todos", id: -1 });
     return array;
   };
-
 
   const getQueryParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -103,17 +93,17 @@ export default function Datos() {
     return params;
   };
 
-
-  useEffect(()=>{
-      campo && setGeoJson(createGeojson(
-       campo
-     ));
-   },[campo])
+  useEffect(() => {
+    campo && setGeoJson(createGeojson(campo));
+  }, [campo]);
 
   useEffect(() => {
     if (campo) {
-     campo.map.bbox &&
-      mapHook.map?.fitBounds(campo.map.bbox as [number, number, number, number]);}
+      campo.map.bbox &&
+        mapHook.map?.fitBounds(
+          campo.map.bbox as [number, number, number, number]
+        );
+    }
   }, [mapHook.map, campo]);
 
   useEffect(() => {
@@ -122,8 +112,11 @@ export default function Datos() {
       mapHook.map?.fitBounds(newBox as [number, number, number, number], {
         padding: { top: 150, bottom: 175, left: 135, right: 135 },
       });
-    } 
-    if(typeof filteredGeojson === "undefined" && typeof geojson !== "undefined") {
+    }
+    if (
+      typeof filteredGeojson === "undefined" &&
+      typeof geojson !== "undefined"
+    ) {
       const newBox = bbox(geojson);
       mapHook.map?.fitBounds(newBox as [number, number, number, number], {
         padding: { top: 150, bottom: 175, left: 135, right: 135 },
@@ -134,36 +127,34 @@ export default function Datos() {
   //filtrar Lotes
 
   useEffect(() => {
-    
     if (lote === 0) {
       setFilteredGeojson(undefined);
     } else {
       if (lote === -1) {
         typeof geojson !== "undefined" &&
-        setFilteredGeojson(() => {
-          return {
-            ...geojson,
-            features: geojson?.features
-          };
-        });
-      } 
-      else {
-      typeof geojson !== "undefined" &&
-        setFilteredGeojson(() => {
-          return {
-            ...geojson,
-            features: geojson?.features?.filter(
-              (el) => el.properties?.plot_id == lote
-            ),
-          };
-        });
+          setFilteredGeojson(() => {
+            return {
+              ...geojson,
+              features: geojson?.features,
+            };
+          });
+      } else {
+        typeof geojson !== "undefined" &&
+          setFilteredGeojson(() => {
+            return {
+              ...geojson,
+              features: geojson?.features?.filter(
+                (el) => el.properties?.plot_id == lote
+              ),
+            };
+          });
       }
     }
   }, [lote, geojson]);
 
   const handleLotesResponse = (data) => {
     if (data) {
-        setCampo(data);
+      setCampo(data);
     }
   };
 
@@ -179,24 +170,22 @@ export default function Datos() {
       setLote(-1);
     }
   }, [lotesList]);
-  
 
   //Read query parameters
   useEffect(() => {
     const params: queryParamsType = getQueryParams();
-  //  params.scout && setSemaforo(params.scout);
-  //  params.plot_id && setLote(params.plot_id);
+    //  params.scout && setSemaforo(params.scout);
+    //  params.plot_id && setLote(params.plot_id);
 
-    if (validQueryParams(params) === '') {
+    if (validQueryParams(params) === "") {
       if (params.farm_id) {
         contexto.getLotes({ farm_id: params.farm_id }, handleLotesResponse);
       } else {
-        console.info('Parametros inválidos');
+        console.info("Parametros inválidos");
       }
     } else {
-      console.info('Parametros inválidos');
+      console.info("Parametros inválidos");
     }
-
   }, []);
 
   return (
@@ -207,12 +196,18 @@ export default function Datos() {
             ? filteredGeojson
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
-        layerId="data_layer"
-        paint={{ "fill-color": fillColor() as string, "fill-outline-color": (lote == -1)?"blue":"black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/ }}
-        onClick={(ev: any) => {    
+        layerId="data_layer"  
+
+        paint={{
+          "fill-color": fillColor() as string,
+          "fill-outline-color":
+            lote == -1
+              ? "blue"
+              : "black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/,
+        }}
+        onClick={(ev: any) => {
           setSelectedFeature(ev.features[0]);
-          setLote(ev.features[0].properties.plot_id)
-          
+          setLote(ev.features[0].properties.plot_id);
         }}
       />
 
@@ -222,6 +217,8 @@ export default function Datos() {
             ? filteredGeojson
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
+        layerId="data_labels" 
+         
         options={{
           type: "symbol",
           layout: {
@@ -235,6 +232,8 @@ export default function Datos() {
       <TopToolbar
         unmovableButtons={
           <>
+<InputLabel>Ver campo: </InputLabel>
+<Switch checked={contexto.showCampo} onChange={()=>contexto.setShowCampo(!contexto.showCampo)}/>
             <InputLabel>Lote</InputLabel>
             <Select
               id="plot_name"
@@ -242,13 +241,13 @@ export default function Datos() {
               value={lote}
               onChange={(ev) => setLote(ev.target.value as number)}
             >
-            {campo && geojson && lotesList.map((el) => (
-                <MenuItem key={el.id} value={el.id}>
-                  {el.name}
-                </MenuItem>
-              ))}
-
-             
+              {campo &&
+                geojson &&
+                lotesList.map((el) => (
+                  <MenuItem key={el.id} value={el.id}>
+                    {el.name}
+                  </MenuItem>
+                ))}
             </Select>
 
             <InputLabel>Semaforos</InputLabel>
@@ -260,17 +259,27 @@ export default function Datos() {
             >
               {semaforos.map((el) => {
                 return (
-                  <MenuItem key={el.label} value={el.field}>                   
+                  <MenuItem key={el.label} value={el.field}>
                     {el.label}
                   </MenuItem>
                 );
               })}
             </Select>
-          
+           
+
           </>
         }
       />
-     {selectedFeature && <DisplayInfos feature={selectedFeature} open={true} closeHandler={()=>{setSelectedFeature(undefined); setLote(-1)} } />}
+      {selectedFeature && (
+        <DisplayInfos
+          feature={selectedFeature}
+          open={true}
+          closeHandler={() => {
+            setSelectedFeature(undefined);
+            setLote(-1);
+          }}
+        />
+      )}
     </>
   );
 }
