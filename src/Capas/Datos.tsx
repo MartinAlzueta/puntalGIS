@@ -27,7 +27,7 @@ interface queryParamsType {
 
 const semaforos = [
   { label: "ninguno", field: "ninguno" },
-  { label: "general", field: "general " },
+  { label: "general", field: "general" },
   { label: "enfermedades", field: "diseases" },
   { label: "calidad de implantación", field: "implementation_quality" },
   { label: "plagas", field: "pests" },
@@ -49,22 +49,44 @@ export default function Datos() {
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const contexto = useContext(APIContext) as any;
   const [geojson, setGeoJson] = useState<any>();
+console.log(geojson)
 
   const fillColor = () => {
-    if (semaforo && semaforo != "ninguno") {
+    if (semaforo && semaforo != "ninguno" && semaforo != "general") {
       return [
         "match",
         ["get", "semaphore", ["get", semaforo]],
-        -1,
-        "rgba(153, 153, 153, 0.7)",
         0,
-        "rgba(150, 206, 180, 0.7)", 
+        "rgba(158, 158, 158, 0.7)",
         1,
-        "rgba(255, 255, 186, 0.7)", 
+        "rgba(76, 175, 80, 0.7)", 
         2,
-        "rgba(255, 48, 48, 0.7)", 
-        "rgba(109, 6, 6, 0.8)",
+        "rgba(255, 235, 59, 0.7)", 
+        3,
+        "rgba(255, 152, 0, 0.7)", 
+        4, 
+        "rgba(244, 67, 54, 0.7)", 
+        //default
+        "rgba(158, 158, 158, 0.7)",
       ];
+    }  else if (semaforo && semaforo == "general"){ 
+        // paleta especial para el semaforo general
+        return [
+            "match",
+            ["get", "semaphore", ["get", "general"]],
+            0,
+            "rgba(2, 68, 27, 0.7)",
+            1,
+            "rgba(76, 175, 80, 0.7)", 
+            2,
+            "rgba(158, 158, 158, 0.7)", 
+            3,
+            "rgba(255, 152, 0, 0.7)", 
+            4, 
+            "rgba(244, 67, 54, 0.7)", 
+            //default
+            "rgba(2, 68, 27, 0.7)",
+          ];
     } else {
       return "rgba(21, 141, 189, 0.2)";
     }

@@ -30,28 +30,28 @@ interface geojsonType {
 const defaultProps = { 
     "pests": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "state": "Pre-siembra",
     "weeds": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "diseases": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
-    "general ": {
+    "general": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },   
     "adversities": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "implementation_quality": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     }
 }
 
