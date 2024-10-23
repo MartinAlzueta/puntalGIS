@@ -1,8 +1,9 @@
 import "./App.css";
 import { MapLibreMap } from "@mapcomponents/react-maplibre";
-import Datos from "./Capas/Datos";
+import Lotes from "./Capas/Lotes";
 import Fondo from "./Capas/Fondo";
 import Campo from "./Capas/Campo";
+import TopBar from "./Componentes/TopBar";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         options={{
           style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
           zoom: 6,
-          center: [-60.039202, -34.872020],
+          center: [-60.039202, -34.87202],
         }}
         style={{
           position: "absolute",
@@ -19,13 +20,14 @@ function App() {
           bottom: 0,
           left: 0,
           right: 0,
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       />
+      <TopBar />
       <Fondo />
-      
-      <Datos />
-        <Campo />    
+
+      <Lotes />
+      <Campo />
     </>
   );
 }
