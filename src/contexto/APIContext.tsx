@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { API_URL, secretKey } from '../utils/config.js'; /* mariana */
 import { desencriptar } from '../utils/utils.js'; /* mariana */
 
@@ -10,7 +10,6 @@ const APIStateProvider = APIContext.Provider;
 const fetchWithToken = async (endpoint: string, options: RequestInit = {}) => {
   const token = localStorage.getItem('token');
   let headers = options.headers || {};
-
   if (token) {
     const decryptedToken = desencriptar(token, secretKey);
     headers['x-access-token'] = `${decryptedToken}`;
@@ -40,7 +39,8 @@ const fetchWithToken = async (endpoint: string, options: RequestInit = {}) => {
 
 
 const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
-
+    const [campo, setCampo] = useState() 
+    const [showCampo, setShowCampo] = useState(true)
  /*   
   //Funcion para pedir los datos de recorridas a la api
   function getRecorridas(callback: (data: JSON) => void) {
@@ -68,10 +68,13 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
       }
     
       fetchWithToken(`map/getFarm/${farm_id}`)
-        .then(function (data) {
+        .then(function (data) {     
           if (data.length > 0) {
             const lotes = data[0]; // Extraer los lotes del primer elemento del array
             callback(lotes);
+            const nuevoCampo = data[0]?.map
+            nuevoCampo.features[0].properties.name = data[0]?.name
+            setCampo(nuevoCampo)            
           } else {
             callback({}); // Manejar el caso de array vacío o formato incorrecto
           }
@@ -83,8 +86,10 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
   const stateProviderValue = {
-    getLotes  
-    
+    getLotes, 
+    campo, 
+    showCampo,
+    setShowCampo      
   };
 
   return (

@@ -8,6 +8,7 @@ interface plotsType {
     "last_scout": any
 }
 export interface campoType {
+    "map": FeatureCollection;
     "id": number;
     "name": string;
     "plots": plotsType[]
@@ -29,28 +30,28 @@ interface geojsonType {
 const defaultProps = { 
     "pests": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "state": "Pre-siembra",
     "weeds": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "diseases": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
-    "general ": {
+    "general": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },   
     "adversities": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     },
     "implementation_quality": {
         "decision": null,
-        "semaphore": -1
+        "semaphore": 0
     }
 }
 
@@ -60,20 +61,20 @@ export default function createGeojson(
   const geojson: geojsonType = {
     type: "FeatureCollection",
     name: "geojson",
-    features: undefined,
+    features: [],
   };
 
   // inserto el campo como lote -1
 /*  if (!lotes.map.bbox) {
     lotes.map.bbox = calculateBbox(lotes.map);
   }*/
-  const firstFeature = {
-    type: "Feature",
-    id: -1,
-    properties: {'plot_name':lotes.name, 'plot_id':-1, ...defaultProps},
-    geometry: lotes["map"].features[0].geometry,
-  };
-  geojson.features = [firstFeature];
+//   const firstFeature = {
+//     type: "Feature",
+//     id: -1,
+//     properties: {'plot_name':lotes.name, 'plot_id':-1, ...defaultProps},
+//     geometry: lotes["map"].features[0].geometry,
+//   };
+//   geojson.features = [firstFeature];
 
 
   lotes.plots?.forEach((element) => {
