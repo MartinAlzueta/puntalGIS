@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { API_URL, secretKey } from '../utils/config.js'; /* mariana */
 import { desencriptar } from '../utils/utils.js'; /* mariana */
 
-const APIContext = React.createContext({});
-const APIStateProvider = APIContext.Provider;
+const DataContext = React.createContext({});
+const  APIStateProvider = DataContext.Provider;
 //TODO: definicion de TS para el contexto
 
 
@@ -38,9 +38,8 @@ const fetchWithToken = async (endpoint: string, options: RequestInit = {}) => {
 };
 
 
-const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [campo, setCampo] = useState() 
-    const [showCampo, setShowCampo] = useState(true)
+const DataContextProvider = ({ children }: { children: React.ReactNode }) => {
+    const [campo, setCampo] = useState()   
  /*   
   //Funcion para pedir los datos de recorridas a la api
   function getRecorridas(callback: (data: JSON) => void) {
@@ -87,9 +86,7 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   const stateProviderValue = {
     getLotes, 
-    campo, 
-    showCampo,
-    setShowCampo      
+    campo,     
   };
 
   return (
@@ -97,4 +94,4 @@ const APIContextProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export { APIContext, APIContextProvider };
+export { DataContext, DataContextProvider };

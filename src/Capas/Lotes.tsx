@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { APIContext } from "../contexto/APIContext";
+import { DataContext } from "../contexto/DataContext";
 //import lotes from "./test/lotes_prueba.json";
 import {
   useMap,
@@ -7,7 +7,7 @@ import {
   TopToolbar,
   MlLayer,
 } from "@mapcomponents/react-maplibre";
-import createGeojson, { campoType } from "../contexto/createGeojson";
+import createGeojson, { campoType } from "../../utils/createGeojson";
 import {
   bbox,
   FeatureCollection,
@@ -37,7 +37,7 @@ const semaforos = [
 
 export default function Lotes() {
   const mapHook = useMap();
-  const contexto = useContext(APIContext) as any;
+  const contexto = useContext(DataContext) as any;
 
   const [lote, setLote] = useState<number>(0);
   const [campo, setCampo] = useState<campoType>();
