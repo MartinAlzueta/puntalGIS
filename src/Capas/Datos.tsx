@@ -1,14 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { APIContext } from "../contexto/APIContext";
-import lotes from "./test/lotes_prueba.json";
+//import lotes from "./test/lotes_prueba.json";
 import {
   useMap,
   MlGeoJsonLayer,
   TopToolbar,
   MlLayer,
 } from "@mapcomponents/react-maplibre";
-import respuestaUltimaRecorrida from "./test/respuestaUltimaRecorrida.json";
-import createGeojson from "../contexto/createGeojson";
+import createGeojson, { campoType } from "../contexto/createGeojson";
 import {
   bbox,
   FeatureCollection,
@@ -17,6 +16,7 @@ import {
 } from "@turf/turf";
 import { InputLabel, Select, MenuItem } from "@mui/material";
 import DisplayInfos from "./DisplayInfo";
+import { validQueryParams} from "../utils/utils.js";
 
 interface queryParamsType {
   scout?: string;
@@ -27,10 +27,12 @@ interface queryParamsType {
 
 const semaforos = [
   { label: "ninguno", field: "ninguno" },
-  { label: "enfermedad", field: "disease_semaphore" },
-  { label: "peste", field: "pest_semaphore" },
-  { label: "maleza", field: "weed_semaphore" },
-  { label: "adversidad", field: "adversity_semaphore" },
+  { label: "general", field: "general " },
+  { label: "enfermedades", field: "diseases" },
+  { label: "calidad de implantación", field: "implementation_quality" },
+  { label: "plagas", field: "pests" },
+  { label: "malezas", field: "weeds" },
+  { label: "adversidades", field: "adversities" },
 ];
 
 export default function Datos() {
@@ -40,68 +42,79 @@ export default function Datos() {
 
   //variables seleccionadas
   const [lote, setLote] = useState<number>(0);
+  const [campo, setCampo] = useState<campoType>();
+  const [lotesList, setLotesList] = useState<any[]>([]);
   const [semaforo, setSemaforo] = useState<string>(semaforos[0].field);
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
   const [selectedFeature, setSelectedFeature] = useState<any>();
-  const [ultimaRecorrida, setUltimaRecorrida] = useState<any>();
   const contexto = useContext(APIContext) as any;
   const [geojson, setGeoJson] = useState<any>(); 
 
+
   const fillColor = () => {
-    if (semaforo) {
-      return [
-        "match",
-        ["get", "last_scout"],
-        0,
-        "#96ceb4",
-        1,
-        "#ffffba",
-        2,
-        "#ff3030",
-        "#999999", //default
-      ];
-    } else return "#999999";
+    if (semaforo && semaforo != "ninguno") {
+        return [
+          "case",
+          // Condition: Check if "semaphore" exists in the semaforo object
+          ["has", "semaphore", ["get", semaforo]],
+          
+          // If "semaphore" exists, use the corresponding semaphore value to return a color
+          [
+            "match",
+            ["get", "semaphore", ["get", semaforo]], // Get the semaphore value
+            -1, "#999999",
+            0, "#96ceb4",  // Color for 0
+            1, "#ffffba",  // Color for 1
+            2, "#ff3030",  // Color for 2
+            "#6D0606"      // Default color if the value is not 0, 1, or 2
+          ],
+      
+          // Fallback if "semaphore" does not exist or is undefined
+          "#6D0606"
+        ];
+      }  else {
+    return "rgba(0, 0, 255, 0.1)"
+      }
+ 
   };
+
 
   const listaLotes = () => {
     const array: any[] = [];
-    geojson.features?.forEach((el) => {
-      if (!array.includes(el.properties.plot_name)) {
-        array.push({
-          name: el.properties.plot_name,
-          id: el.properties.plot_id,
-        });
-      }
-    });
-    array.push({ name: "todos", id: 0 });
+    if (campo) {
+      campo.plots?.forEach((el) => {
+          array.push({
+            name: el.name,
+            id: el.id,
+          });
+      });
+    } 
+    array.push({ name: "todos", id: -1 });
     return array;
   };
 
+
   const getQueryParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
-    const params = {};
+    const params: queryParamsType = {};
     for (let [key, value] of searchParams.entries()) {
       params[key] = value;
     }
-
     return params;
   };
 
-  useEffect(() => {
-        contexto.getRecorridas((data)=>setUltimaRecorrida(data));
-  }, []);
 
-useEffect(()=>{
-  ultimaRecorrida && setGeoJson(createGeojson(
-    ultimaRecorrida,
-    lotes as unknown as FeatureCollection
-  ));
-},[ultimaRecorrida])
+  useEffect(()=>{
+      campo && setGeoJson(createGeojson(
+       campo
+     ));
+   },[campo])
 
   useEffect(() => {
-    lotes.bbox &&
-      mapHook.map?.fitBounds(lotes.bbox as [number, number, number, number]);
-  }, [mapHook.map, lotes]);
+    if (campo) {
+     campo.map.bbox &&
+      mapHook.map?.fitBounds(campo.map.bbox as [number, number, number, number]);}
+  }, [mapHook.map, campo]);
 
   useEffect(() => {
     if (typeof filteredGeojson !== "undefined") {
@@ -121,9 +134,20 @@ useEffect(()=>{
   //filtrar Lotes
 
   useEffect(() => {
+    
     if (lote === 0) {
       setFilteredGeojson(undefined);
     } else {
+      if (lote === -1) {
+        typeof geojson !== "undefined" &&
+        setFilteredGeojson(() => {
+          return {
+            ...geojson,
+            features: geojson?.features
+          };
+        });
+      } 
+      else {
       typeof geojson !== "undefined" &&
         setFilteredGeojson(() => {
           return {
@@ -133,14 +157,46 @@ useEffect(()=>{
             ),
           };
         });
+      }
     }
   }, [lote, geojson]);
+
+  const handleLotesResponse = (data) => {
+    if (data) {
+        setCampo(data);
+    }
+  };
+
+  useEffect(() => {
+    if (campo) {
+      const lotesLista = listaLotes();
+      setLotesList(lotesLista);
+    }
+  }, [campo]);
+
+  useEffect(() => {
+    if (campo) {
+      setLote(-1);
+    }
+  }, [lotesList]);
+  
 
   //Read query parameters
   useEffect(() => {
     const params: queryParamsType = getQueryParams();
-    params.scout && setSemaforo(params.scout);
-    params.plot_id && setLote(params.plot_id);
+  //  params.scout && setSemaforo(params.scout);
+  //  params.plot_id && setLote(params.plot_id);
+
+    if (validQueryParams(params) === '') {
+      if (params.farm_id) {
+        contexto.getLotes({ farm_id: params.farm_id }, handleLotesResponse);
+      } else {
+        console.info('Parametros inválidos');
+      }
+    } else {
+      console.info('Parametros inválidos');
+    }
+
   }, []);
 
   return (
@@ -152,8 +208,8 @@ useEffect(()=>{
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
         layerId="data_layer"
-        paint={{ "fill-color": fillColor() as string }}
-        onClick={(ev: any) => {          
+        paint={{ "fill-color": fillColor() as string, "fill-outline-color": (lote == -1)?"blue":"black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/ }}
+        onClick={(ev: any) => {    
           setSelectedFeature(ev.features[0]);
           setLote(ev.features[0].properties.plot_id)
           
@@ -186,14 +242,13 @@ useEffect(()=>{
               value={lote}
               onChange={(ev) => setLote(ev.target.value as number)}
             >
-              {geojson && listaLotes().map((el) => {
-                return (
-                  <MenuItem key={el.id} value={el.id}>
-                    {" "}
-                    {el.name}
-                  </MenuItem>
-                );
-              })}
+            {campo && geojson && lotesList.map((el) => (
+                <MenuItem key={el.id} value={el.id}>
+                  {el.name}
+                </MenuItem>
+              ))}
+
+             
             </Select>
 
             <InputLabel>Semaforos</InputLabel>
@@ -215,7 +270,7 @@ useEffect(()=>{
           </>
         }
       />
-     {selectedFeature && <DisplayInfos feature={selectedFeature} open={true} closeHandler={()=>{setSelectedFeature(undefined); setLote(0)} } />}
+     {selectedFeature && <DisplayInfos feature={selectedFeature} open={true} closeHandler={()=>{setSelectedFeature(undefined); setLote(-1)} } />}
     </>
   );
 }
