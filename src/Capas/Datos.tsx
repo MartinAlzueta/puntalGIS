@@ -229,7 +229,9 @@ export default function Datos() {
         }}
       />
 
-      <TopToolbar
+
+
+      <TopToolbar      
         unmovableButtons={
           <>
 <InputLabel>Ver campo: </InputLabel>
@@ -270,6 +272,7 @@ export default function Datos() {
           </>
         }
       />
+
       {selectedFeature && (
         <DisplayInfos
           feature={selectedFeature}
@@ -279,6 +282,7 @@ export default function Datos() {
             setLote(-1);
           }}
         />
+
       )}
     </>
   );
