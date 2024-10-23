@@ -33,7 +33,7 @@ const fetchWithToken = async (endpoint: string, options: RequestInit = {}) => {
     const text = await response.text();
     throw new SyntaxError(`Expected JSON, got ${contentType}: ${text}`);
   }
-  console.info('en APIContext, ',endpoint,' devuelve ',response);
+ 
   return response.json();
 };
 

@@ -15,7 +15,7 @@ import {
   Properties,
 } from "@turf/turf";
 import { InputLabel, Select, MenuItem, Switch } from "@mui/material";
-import DisplayInfos from "./DisplayInfo";
+import DisplayInfos from "../Componentes/DisplayInfo";
 import { validQueryParams } from "../utils/utils.js";
 
 interface queryParamsType {
@@ -35,21 +35,17 @@ const semaforos = [
   { label: "adversidades", field: "adversities" },
 ];
 
-export default function Datos() {
-  //const [datos, setDatos] = useState();
-  //const contexto = useContext(APIContext) as any;
+export default function Lotes() {
   const mapHook = useMap();
+  const contexto = useContext(APIContext) as any;
 
-  //variables seleccionadas
   const [lote, setLote] = useState<number>(0);
   const [campo, setCampo] = useState<campoType>();
   const [lotesList, setLotesList] = useState<any[]>([]);
   const [semaforo, setSemaforo] = useState<string>(semaforos[0].field);
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
   const [selectedFeature, setSelectedFeature] = useState<any>();
-  const contexto = useContext(APIContext) as any;
   const [geojson, setGeoJson] = useState<any>();
-console.log(geojson)
 
   const fillColor = () => {
     if (semaforo && semaforo != "ninguno" && semaforo != "general") {
@@ -59,34 +55,34 @@ console.log(geojson)
         0,
         "rgba(158, 158, 158, 0.7)",
         1,
-        "rgba(76, 175, 80, 0.7)", 
+        "rgba(76, 175, 80, 0.7)",
         2,
-        "rgba(255, 235, 59, 0.7)", 
+        "rgba(255, 235, 59, 0.7)",
         3,
-        "rgba(255, 152, 0, 0.7)", 
-        4, 
-        "rgba(244, 67, 54, 0.7)", 
+        "rgba(255, 152, 0, 0.7)",
+        4,
+        "rgba(244, 67, 54, 0.7)",
         //default
         "rgba(158, 158, 158, 0.7)",
       ];
-    }  else if (semaforo && semaforo == "general"){ 
-        // paleta especial para el semaforo general
-        return [
-            "match",
-            ["get", "semaphore", ["get", "general"]],
-            0,
-            "rgba(2, 68, 27, 0.7)",
-            1,
-            "rgba(76, 175, 80, 0.7)", 
-            2,
-            "rgba(158, 158, 158, 0.7)", 
-            3,
-            "rgba(255, 152, 0, 0.7)", 
-            4, 
-            "rgba(244, 67, 54, 0.7)", 
-            //default
-            "rgba(2, 68, 27, 0.7)",
-          ];
+    } else if (semaforo && semaforo == "general") {
+      // paleta especial para el semaforo general
+      return [
+        "match",
+        ["get", "semaphore", ["get", "general"]],
+        0,
+        "rgba(2, 68, 27, 0.7)",
+        1,
+        "rgba(76, 175, 80, 0.7)",
+        2,
+        "rgba(158, 158, 158, 0.7)",
+        3,
+        "rgba(255, 152, 0, 0.7)",
+        4,
+        "rgba(244, 67, 54, 0.7)",
+        //default
+        "rgba(2, 68, 27, 0.7)",
+      ];
     } else {
       return "rgba(21, 141, 189, 0.2)";
     }
@@ -218,8 +214,7 @@ console.log(geojson)
             ? filteredGeojson
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
-        layerId="data_layer"  
-
+        layerId="data_layer"
         paint={{
           "fill-color": fillColor() as string,
           "fill-outline-color":
@@ -239,8 +234,7 @@ console.log(geojson)
             ? filteredGeojson
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
-        layerId="data_labels" 
-         
+        layerId="data_labels"
         options={{
           type: "symbol",
           layout: {
@@ -250,14 +244,16 @@ console.log(geojson)
           paint: { "text-color": "#000" },
         }}
       />
+    
 
-
-
-      <TopToolbar      
+      {/* <TopToolbar
         unmovableButtons={
           <>
-<InputLabel>Ver campo: </InputLabel>
-<Switch checked={contexto.showCampo} onChange={()=>contexto.setShowCampo(!contexto.showCampo)}/>
+            <InputLabel>Ver campo: </InputLabel>
+            <Switch
+              checked={contexto.showCampo}
+              onChange={() => contexto.setShowCampo(!contexto.showCampo)}
+            />
             <InputLabel>Lote</InputLabel>
             <Select
               id="plot_name"
@@ -289,11 +285,9 @@ console.log(geojson)
                 );
               })}
             </Select>
-           
-
           </>
         }
-      />
+      /> */}
 
       {selectedFeature && (
         <DisplayInfos
@@ -304,7 +298,6 @@ console.log(geojson)
             setLote(-1);
           }}
         />
-
       )}
     </>
   );
