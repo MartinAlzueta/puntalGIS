@@ -1,6 +1,13 @@
-import { AppBar, Typography, Toolbar } from "@mui/material";
+import { useState } from "react";
+
+import { AppBar, Typography, Toolbar, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Tools from "./Tools";
+import  SideBar from "./SideBar";
+
+
 export default function TopBar() {
+    const [open, setOpen] = useState(false);
   return (
     <>
       <AppBar
@@ -17,7 +24,10 @@ export default function TopBar() {
         }}
       >
         <Toolbar>
-          <MenuIcon />
+            <IconButton onClick={()=>setOpen(!open)}>
+                 <MenuIcon />
+            </IconButton>
+         
           <Typography
             variant="h5"
             fontWeight={500}
@@ -30,6 +40,10 @@ export default function TopBar() {
           </Typography>
         </Toolbar>
       </AppBar>
+
+      <SideBar open={open} setOpen={setOpen} >
+        <Tools />
+      </SideBar>
     </>
   );
 }

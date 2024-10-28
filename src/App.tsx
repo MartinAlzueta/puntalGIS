@@ -4,7 +4,6 @@ import Lotes from "./Capas/Lotes";
 import Fondo from "./Capas/Fondo";
 import Campo from "./Capas/Campo";
 import TopBar from "./Componentes/TopBar";
-import SideBar from "./Componentes/SideBar";
 
 function App() {
   return (
@@ -25,7 +24,7 @@ function App() {
         }}
       />
       <TopBar />
-      <SideBar />
+     
       <Fondo />
 
       <Lotes />

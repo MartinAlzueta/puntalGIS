@@ -15,7 +15,8 @@
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.21.1",
         "turf": "^3.0.14",
-        "crypto-js": "^4.2.0"
+        "crypto-js": "^4.2.0",
+        "simplebar-react": "^2.4.1"
     },
     "devDependencies": {
         "@types/react": "^18.0.37",

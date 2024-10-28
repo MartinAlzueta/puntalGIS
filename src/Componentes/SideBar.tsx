@@ -1,69 +1,26 @@
-import { useContext, useEffect } from "react";
-import { InputLabel, Select, MenuItem, Switch } from "@mui/material";
-import { AppContext } from "../contexto/AppContext";
-import { DataContext } from "../contexto/DataContext";
 
-const semaforos = [
-    { label: "ninguno", field: "ninguno" },
-    { label: "general", field: "general" },
-    { label: "enfermedades", field: "diseases" },
-    { label: "calidad de implantación", field: "implementation_quality" },
-    { label: "plagas", field: "pests" },
-    { label: "malezas", field: "weeds" },
-    { label: "adversidades", field: "adversities" },
-  ];
+import { AppBar} from "@mui/material";
 
 
+import "simplebar-react/dist/simplebar.min.css";
 
-export default function SideBar(){
-
-const appContext = useContext(AppContext) as any;
-const dataContext = useContext(DataContext) as any;
-
-useEffect(()=>{
-    appContext.setSemaforo(semaforos[0].field)
-}, [])
-return (
+export default function SideBar(props) {
+  return (
     <>
-    <>
-            <InputLabel>Ver campo: </InputLabel>
-            <Switch
-              checked={appContext.showCampo}
-              onChange={() => appContext.setShowCampo(!appContext.showCampo)}
-            />
-            <InputLabel>Lote</InputLabel>
-            <Select
-              id="plot_name"
-              label="lote"
-              value={appContext.lote}
-              onChange={(ev) => appContext.setLoteSeleccionado(ev.target.value as number)}
-            >
-              {dataContext.campo &&              
-                dataContext.lotesList.map((el) => (
-                  <MenuItem key={el.id} value={el.id}>
-                    {el.name}
-                  </MenuItem>
-                ))}
-            </Select>
-
-            <InputLabel>Semaforos</InputLabel>
-            <Select
-              id="semaforos"
-              label="semaforos"
-              value={appContext.semaforo}
-              onChange={(ev) => appContext.setSemaforo(ev.target.value as string)}
-            >
-              {semaforos.map((el) => {
-                return (
-                  <MenuItem key={el.label} value={el.field}>
-                    {el.label}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </>
-    
+      <AppBar
+        position="fixed"
+        elevation={0}
+        style={{
+          paddingTop: "74px",
+          backgroundColor: "rgba(55,55,55,0.9)",
+          zIndex: 1050,
+          left: 0,
+          height: props.open ? "100%" : "0px",
+          width: props.open ? "300px" : "0px",
+        }}
+      >
+        {props.open && props.children}
+      </AppBar>
     </>
-)
-
+  );
 }
