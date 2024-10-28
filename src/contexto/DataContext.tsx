@@ -37,25 +37,22 @@ const fetchWithToken = async (endpoint: string, options: RequestInit = {}) => {
   return response.json();
 };
 
+const listarLotes = (lotes: any) => {
+    const array: any[] = [];        
+      lotes.forEach((el) => {
+        array.push({
+          name: el.name,
+          id: el.id,
+        });
+     });        
+    array.push({ name: "todos", id: -1 });
+    return array;
+  };
+
 
 const DataContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [campo, setCampo] = useState()   
- /*   
-  //Funcion para pedir los datos de recorridas a la api
-  function getRecorridas(callback: (data: JSON) => void) {
-    fetch('http://158.69.146.130:3001/api/map/getFarmState/35/2023-11-11')
-      .then(function (response) {
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(function (json) {
-        callback(json);
-      });
-  }
-*/
+    const [campo, setCampo] = useState<any>()   
+    const [lotesList, setLotesList] = useState<any[]>([]);
 
     //Funcion para pedir los datos de lotes a la api
     function getLotes(params, callback: (data: any | {}) => void) {
@@ -73,7 +70,11 @@ const DataContextProvider = ({ children }: { children: React.ReactNode }) => {
             callback(lotes);
             const nuevoCampo = data[0]?.map
             nuevoCampo.features[0].properties.name = data[0]?.name
-            setCampo(nuevoCampo)            
+            setCampo(nuevoCampo)
+            
+            //listar los lotes
+            const nuevaLista = listarLotes(lotes.plots);
+            setLotesList(nuevaLista);            
           } else {
             callback({}); // Manejar el caso de array vacío o formato incorrecto
           }
@@ -84,9 +85,13 @@ const DataContextProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }
 
+
+    
+
   const stateProviderValue = {
     getLotes, 
-    campo,     
+    campo,  
+    lotesList   
   };
 
   return (

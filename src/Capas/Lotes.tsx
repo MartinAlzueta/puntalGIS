@@ -3,8 +3,7 @@ import { DataContext } from "../contexto/DataContext";
 //import lotes from "./test/lotes_prueba.json";
 import {
   useMap,
-  MlGeoJsonLayer,
-  TopToolbar,
+  MlGeoJsonLayer,  
   MlLayer,
 } from "@mapcomponents/react-maplibre";
 import createGeojson, { campoType } from "../../utils/createGeojson";
@@ -14,9 +13,9 @@ import {
   GeometryCollection,
   Properties,
 } from "@turf/turf";
-import { InputLabel, Select, MenuItem, Switch } from "@mui/material";
 import DisplayInfos from "../Componentes/DisplayInfo";
 import { validQueryParams } from "../utils/utils.js";
+import { AppContext } from "../contexto/AppContext";
 
 interface queryParamsType {
   scout?: string;
@@ -25,33 +24,24 @@ interface queryParamsType {
   plot_id?: number;
 }
 
-const semaforos = [
-  { label: "ninguno", field: "ninguno" },
-  { label: "general", field: "general" },
-  { label: "enfermedades", field: "diseases" },
-  { label: "calidad de implantación", field: "implementation_quality" },
-  { label: "plagas", field: "pests" },
-  { label: "malezas", field: "weeds" },
-  { label: "adversidades", field: "adversities" },
-];
+
 
 export default function Lotes() {
   const mapHook = useMap();
   const contexto = useContext(DataContext) as any;
+  const appcontext = useContext(AppContext) as any;
 
-  const [lote, setLote] = useState<number>(0);
   const [campo, setCampo] = useState<campoType>();
-  const [lotesList, setLotesList] = useState<any[]>([]);
-  const [semaforo, setSemaforo] = useState<string>(semaforos[0].field);
+
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const [geojson, setGeoJson] = useState<any>();
 
   const fillColor = () => {
-    if (semaforo && semaforo != "ninguno" && semaforo != "general") {
+    if (appcontext.semaforo && appcontext.semaforo != "ninguno" && appcontext.semaforo != "general") {
       return [
         "match",
-        ["get", "semaphore", ["get", semaforo]],
+        ["get", "semaphore", ["get", appcontext.semaforo]],
         0,
         "rgba(158, 158, 158, 0.7)",
         1,
@@ -65,7 +55,7 @@ export default function Lotes() {
         //default
         "rgba(158, 158, 158, 0.7)",
       ];
-    } else if (semaforo && semaforo == "general") {
+    } else if (appcontext.semaforo && appcontext.semaforo == "general") {
       // paleta especial para el semaforo general
       return [
         "match",
@@ -88,20 +78,7 @@ export default function Lotes() {
     }
   };
 
-  const listaLotes = () => {
-    const array: any[] = [];
-    if (campo) {
-      campo.plots?.forEach((el) => {
-        array.push({
-          name: el.name,
-          id: el.id,
-        });
-      });
-    }
-    array.push({ name: "todos", id: -1 });
-    return array;
-  };
-
+  
   const getQueryParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const params: queryParamsType = {};
@@ -145,6 +122,8 @@ export default function Lotes() {
   //filtrar Lotes
 
   useEffect(() => {
+    const lote = appcontext.loteSeleccionado;
+
     if (lote === 0) {
       setFilteredGeojson(undefined);
     } else {
@@ -168,7 +147,7 @@ export default function Lotes() {
           });
       }
     }
-  }, [lote, geojson]);
+  }, [appcontext.loteSeleccionado, geojson]);
 
   const handleLotesResponse = (data) => {
     if (data) {
@@ -176,19 +155,7 @@ export default function Lotes() {
     }
   };
 
-  useEffect(() => {
-    if (campo) {
-      const lotesLista = listaLotes();
-      setLotesList(lotesLista);
-    }
-  }, [campo]);
-
-  useEffect(() => {
-    if (campo) {
-      setLote(-1);
-    }
-  }, [lotesList]);
-
+  
   //Read query parameters
   useEffect(() => {
     const params: queryParamsType = getQueryParams();
@@ -215,16 +182,16 @@ export default function Lotes() {
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
         layerId="data_layer"
-        paint={{
+        options={{paint:{
           "fill-color": fillColor() as string,
           "fill-outline-color":
-            lote == -1
+            appcontext.loteSeleccionado == -1
               ? "blue"
               : "black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/,
-        }}
+        } }}       
         onClick={(ev: any) => {
           setSelectedFeature(ev.features[0]);
-          setLote(ev.features[0].properties.plot_id);
+          appcontext.setLoteSeleccionado(ev.features[0].properties.plot_id);
         }}
       />
 
@@ -246,56 +213,13 @@ export default function Lotes() {
       />
     
 
-      {/* <TopToolbar
-        unmovableButtons={
-          <>
-            <InputLabel>Ver campo: </InputLabel>
-            <Switch
-              checked={contexto.showCampo}
-              onChange={() => contexto.setShowCampo(!contexto.showCampo)}
-            />
-            <InputLabel>Lote</InputLabel>
-            <Select
-              id="plot_name"
-              label="lote"
-              value={lote}
-              onChange={(ev) => setLote(ev.target.value as number)}
-            >
-              {campo &&
-                geojson &&
-                lotesList.map((el) => (
-                  <MenuItem key={el.id} value={el.id}>
-                    {el.name}
-                  </MenuItem>
-                ))}
-            </Select>
-
-            <InputLabel>Semaforos</InputLabel>
-            <Select
-              id="semaforos"
-              label="semaforos"
-              value={semaforo}
-              onChange={(ev) => setSemaforo(ev.target.value as string)}
-            >
-              {semaforos.map((el) => {
-                return (
-                  <MenuItem key={el.label} value={el.field}>
-                    {el.label}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </>
-        }
-      /> */}
-
       {selectedFeature && (
         <DisplayInfos
           feature={selectedFeature}
           open={true}
           closeHandler={() => {
             setSelectedFeature(undefined);
-            setLote(-1);
+            appcontext.setLoteSeleccionado(-1);
           }}
         />
       )}
