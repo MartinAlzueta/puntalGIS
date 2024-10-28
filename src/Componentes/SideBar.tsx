@@ -12,11 +12,11 @@ export default function SideBar(props) {
         elevation={0}
         style={{
           paddingTop: "74px",
-          backgroundColor: "rgba(55,55,55,0.9)",
+          backgroundColor: "rgba(255,255,255)",
           zIndex: 1050,
           left: 0,
           height: props.open ? "100%" : "0px",
-          width: props.open ? "300px" : "0px",
+          width: props.open ? "256px" : "0px",
         }}
       >
         {props.open && props.children}

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { InputLabel, Select, MenuItem, Switch } from "@mui/material";
+import { InputLabel, Select, MenuItem, Switch, Box } from "@mui/material";
 import { AppContext } from "../contexto/AppContext";
 import { DataContext } from "../contexto/DataContext";
 
@@ -22,11 +22,13 @@ const dataContext = useContext(DataContext) as any;
 
 useEffect(()=>{
     appContext.setSemaforo(semaforos[0].field)
+    appContext.set
 }, [])
 return (
     
-    <>
-            <InputLabel>Ver campo: </InputLabel>
+    <> <Box sx={{padding: 2}}>
+
+        <InputLabel>Ver campo: </InputLabel>
             <Switch
               checked={appContext.showCampo}
               onChange={() => appContext.setShowCampo(!appContext.showCampo)}
@@ -35,8 +37,9 @@ return (
             <Select
               id="plot_name"
               label="lote"
-              value={appContext.lote}
+              value={appContext.loteSeleccionado}
               onChange={(ev) => appContext.setLoteSeleccionado(ev.target.value as number)}
+              fullWidth
             >
               {dataContext.campo &&              
                 dataContext.lotesList.map((el) => (
@@ -52,6 +55,7 @@ return (
               label="semaforos"
               defaultValue={appContext.semaforo}
               onChange={(ev) => appContext.setSemaforo(ev.target.value as string)}
+              fullWidth
             >
               {semaforos.map((el) => {
                 return (
@@ -61,6 +65,8 @@ return (
                 );
               })}
             </Select>
+    </Box>
+            
           </>   
    
 )

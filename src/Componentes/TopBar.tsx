@@ -24,17 +24,17 @@ export default function TopBar() {
         }}
       >
         <Toolbar>
-            <IconButton onClick={()=>setOpen(!open)}>
+            <IconButton sx={{color: "white"}} onClick={()=>setOpen(!open)}>
                  <MenuIcon />
             </IconButton>
          
           <Typography
             variant="h5"
-            fontWeight={500}
+            fontWeight={550}
             //   fontSize="20px"
             //   lineHeight="32px"
             fontFamily="Roboto, Helvetica Neue, sans-serif"
-            paddingLeft={2}
+            paddingLeft={1}
           >
             Puntal Agro
           </Typography>

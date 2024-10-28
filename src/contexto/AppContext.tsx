@@ -9,8 +9,8 @@ const AppStateProvider = AppContext.Provider;
 const AppContextProvider = ({ children }) => {
 
     const [showCampo, setShowCampo] = useState(true)
-    const [semaforo, setSemaforo] = useState<string>();
-    const [loteSeleccionado, setLoteSeleccionado] = useState<number>(0);
+    const [semaforo, setSemaforo] = useState<string>("ninguno");
+    const [loteSeleccionado, setLoteSeleccionado] = useState<number>(-1);
 
 
   const value = {   
