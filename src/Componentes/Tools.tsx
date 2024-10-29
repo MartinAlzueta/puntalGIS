@@ -1,7 +1,9 @@
 import { useContext, useEffect } from "react";
-import { InputLabel, Select, MenuItem, Switch, Box } from "@mui/material";
+import { InputLabel, Select, MenuItem, Switch, Box, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { AppContext } from "../contexto/AppContext";
 import { DataContext } from "../contexto/DataContext";
+import ExportPDF from "./ExportPDF";
 
 const semaforos = [
     { label: "ninguno", field: "ninguno" },
@@ -65,6 +67,19 @@ return (
                 );
               })}
             </Select>
+            <Accordion variant="outlined" sx={{marginTop: "20px"}} >
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography>Exportar mapa</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+                   <ExportPDF titulo={appContext.loteSeleccionado !== -1 ? dataContext.lotesList.filter((lote)=>lote.id == appContext.loteSeleccionado)[0].name : dataContext.campo.features[0].properties.name}/>
+
+        </AccordionDetails>
+      </Accordion>
     </Box>
             
           </>   

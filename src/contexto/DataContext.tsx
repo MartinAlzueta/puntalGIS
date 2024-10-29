@@ -53,7 +53,7 @@ const listarLotes = (lotes: any) => {
 const DataContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [campo, setCampo] = useState<any>()   
     const [lotesList, setLotesList] = useState<any[]>([]);
-
+console.log(campo)
     //Funcion para pedir los datos de lotes a la api
     function getLotes(params, callback: (data: any | {}) => void) {
       const { farm_id } = params;
