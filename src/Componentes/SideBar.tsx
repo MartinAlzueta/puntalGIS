@@ -33,6 +33,7 @@ export default function SideBar(props: any) {
         <DisplayInfos />
       ) : <Typography variant="body1"> Seleccione un lote para ver la información. </Typography>,
     icon: <InfoIcon />,
+    onExpand: (expanded: boolean)=> !expanded && appContext.setSelectedFeature(undefined),
     expanded: !!appContext.selectedFeature,
     disabled: !appContext.selectedFeature,
 } , {
@@ -64,6 +65,7 @@ export default function SideBar(props: any) {
           left: 0,
           height: props.open ? "100%" : "0px",
           width: props.open ? "256px" : "0px",
+          overflowY: 'auto'
         }}
       >
         {props.open && menus.map((item)=> <Accordion expanded={item.expanded??undefined} disabled={item.disabled?? undefined} onChange={item.onExpand ? (_ev, isExpanded)=> item.onExpand(isExpanded): undefined} key={item.title}>
