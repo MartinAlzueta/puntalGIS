@@ -40,6 +40,19 @@ const colores = {
   "4": "rgba(244, 67, 54, 0.7)",
 };
 
+const coloresGeneral = {
+    0:
+    "rgba(2, 68, 27, 0.7)",
+    1:
+    "rgba(76, 175, 80, 0.7)",
+    2:
+    "rgba(158, 158, 158, 0.7)",
+    3:
+    "rgba(255, 152, 0, 0.7)",
+    4:
+    "rgba(244, 67, 54, 0.7)",
+}
+
 export default function DisplayInfos() {
   const appContext = useContext(AppContext) as any;
   const plotData = appContext.selectedFeature?.properties;
@@ -104,8 +117,8 @@ export default function DisplayInfos() {
                         <SquareIcon
                           sx={{
                             color: parseJSON(plotData[key]).semaphore
-                              ? colores[parseJSON(plotData[key]).semaphore]
-                              : "rgba(158, 158, 158, 0.7)",
+                              ? ( key === "general" ? coloresGeneral : colores)[parseJSON(plotData[key]).semaphore]
+                              : (key === "general" ? "rgba(2, 68, 27, 0.7)" :"rgba(158, 158, 158, 0.7)"),
                           }}
                         />
                       </Grid>
