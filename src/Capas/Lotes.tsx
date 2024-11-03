@@ -34,7 +34,6 @@ export default function Lotes() {
   const [campo, setCampo] = useState<campoType>();
 
   const [filteredGeojson, setFilteredGeojson] = useState<any>();
-  const [selectedFeature, setSelectedFeature] = useState<any>();
   const [geojson, setGeoJson] = useState<any>();
 
   const fillColor = () => {
@@ -119,6 +118,15 @@ export default function Lotes() {
     }
   }, [mapHook.map, filteredGeojson]);
 
+// quitar filtros si se deselecciona un lote
+
+useEffect(()=>{
+    !appcontext.selectedFeature && setFilteredGeojson(undefined)
+}, [
+    appcontext.selectedFeature
+])
+
+
   //filtrar Lotes
 
   useEffect(() => {
@@ -190,8 +198,14 @@ export default function Lotes() {
               : "black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/,
         } }}       
         onClick={(ev: any) => {
-          setSelectedFeature(ev.features[0]);
-          appcontext.setLoteSeleccionado(ev.features[0].properties.plot_id);
+            if(ev.features[0].properties.plot_id == appcontext.loteSeleccionado){
+                appcontext.setSelectedFeature(undefined);
+                appcontext.setLoteSeleccionado(-1); 
+            }else{
+                appcontext.setSelectedFeature(ev.features[0]);
+          appcontext.setLoteSeleccionado(ev.features[0].properties.plot_id); 
+            }
+         
         }}
       />
 
@@ -211,18 +225,6 @@ export default function Lotes() {
           paint: { "text-color": "#000" },
         }}
       />
-    
-
-      {selectedFeature && (
-        <DisplayInfos
-          feature={selectedFeature}
-          open={true}
-          closeHandler={() => {
-            setSelectedFeature(undefined);
-            appcontext.setLoteSeleccionado(-1);
-          }}
-        />
-      )}
     </>
   );
 }

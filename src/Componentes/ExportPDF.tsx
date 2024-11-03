@@ -1,17 +1,18 @@
-import { MlCreatePdfButton, MlCreatePdfForm } from "@mapcomponents/react-maplibre";
-import { useState } from "react";
+import { MlCreatePdfForm } from "@mapcomponents/react-maplibre";
+
 import { logoToBase64 } from "./logo";
 
 
 export interface exportPDFProps{
 titulo?: string,
+showForm: boolean
 }
 
 export default function ExportPDF(props: exportPDFProps){
-//    const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
+   
     return(<>
-    	
-   <MlCreatePdfForm
+   {props.showForm &&  <MlCreatePdfForm
+
 				onCreatePdf={(options) => {
                     
 					const pdf = options.pdf;
@@ -96,7 +97,8 @@ export default function ExportPDF(props: exportPDFProps){
                     
                     return options;
 				}}
-			/>
+			/> 	}
+  
 
     </>)
 }

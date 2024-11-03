@@ -8,6 +8,7 @@ import {AppBar,
   } from "@mui/material";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import InfoIcon from '@mui/icons-material/Info';
 import "simplebar-react/dist/simplebar.min.css";
 
 import ExportPDF from "./ExportPDF";
@@ -21,13 +22,23 @@ export default function SideBar(props: any) {
   const appContext = useContext(AppContext) as any;
   const dataContext = useContext(DataContext) as any;
 
+  // objeto en el qeu se definen los menus
   const menus = [{
     title: "Filtros",
     child: <Tools />,
-    icon: <FilterAltIcon />
+    icon: <FilterAltIcon /> 
   }, {
+    title: "Información del Lote",
+    child:  appContext.selectedFeature ? (
+        <DisplayInfos />
+      ) : <Typography variant="body1"> Seleccione un lote para ver la información. </Typography>,
+    icon: <InfoIcon />,
+    expanded: !!appContext.selectedFeature,
+    disabled: !appContext.selectedFeature,
+} , {
     title: "Exportar mapa",
     child: <ExportPDF
+    showForm={appContext.showPdfForm}
     titulo={
       appContext.loteSeleccionado !== -1
         ? dataContext.lotesList.filter(
@@ -36,20 +47,16 @@ export default function SideBar(props: any) {
         : dataContext.campo?.features[0].properties.name
     }
   />,
-  icon: <PictureAsPdfIcon />
+  icon: <PictureAsPdfIcon />,
+  onExpand: (expanded: boolean)=> appContext.setShowPdfForm(expanded)
   }
-//   ,{
-//     title: "Información",
-//     child: <DisplayInfos />,
-//     icon: undefined 
-// } 
 ];
 
   return (
     <>
       <AppBar
         position="fixed"
-        elevation={0}
+        //elevation={1}               
         style={{
           paddingTop: "74px",
           backgroundColor: "rgba(255,255,255)",
@@ -59,8 +66,8 @@ export default function SideBar(props: any) {
           width: props.open ? "256px" : "0px",
         }}
       >
-        {props.open && menus.map((item)=> <Accordion>
-              <AccordionSummary>
+        {props.open && menus.map((item)=> <Accordion expanded={item.expanded??undefined} disabled={item.disabled?? undefined} onChange={item.onExpand ? (_ev, isExpanded)=> item.onExpand(isExpanded): undefined} key={item.title}>
+              <AccordionSummary >
                 {item.icon}
                 <Typography variant="body2" sx={{paddingLeft: 1}}>{item.title}</Typography>
               </AccordionSummary>

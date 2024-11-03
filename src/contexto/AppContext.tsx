@@ -4,22 +4,24 @@ import PropTypes from "prop-types";
 const AppContext = React.createContext({});
 const AppStateProvider = AppContext.Provider;
 
-
-
 const AppContextProvider = ({ children }) => {
+  const [showCampo, setShowCampo] = useState(true);
+  const [semaforo, setSemaforo] = useState<string>("ninguno");
+  const [loteSeleccionado, setLoteSeleccionado] = useState<number>(-1);
+  const [selectedFeature, setSelectedFeature] = useState<any>();
+  const [showPdfForm, setShowPdfForm] =useState(false)
 
-    const [showCampo, setShowCampo] = useState(true)
-    const [semaforo, setSemaforo] = useState<string>("ninguno");
-    const [loteSeleccionado, setLoteSeleccionado] = useState<number>(-1);
-
-
-  const value = {   
+  const value = {
     showCampo,
     setShowCampo,
     semaforo,
-    setSemaforo, 
+    setSemaforo,
     loteSeleccionado,
-    setLoteSeleccionado
+    setLoteSeleccionado,
+    selectedFeature,
+    setSelectedFeature,
+    showPdfForm,
+    setShowPdfForm
   };
 
   return <AppStateProvider value={value}>{children}</AppStateProvider>;
