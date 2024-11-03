@@ -66,6 +66,11 @@ export default function DisplayInfos() {
       return null;
     }
   };
+
+  const getDate = (dateStr:string)=>{
+    const date = new Date(dateStr);   
+    return date.toLocaleDateString('es-LA')
+  }
   return (
     <>
      
@@ -86,7 +91,7 @@ export default function DisplayInfos() {
               Id del lote: {plotData.plot_id}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Fecha: {plotData.date_time}
+              Fecha de recorrida: {getDate(plotData.date_time)}
             </Typography>
             <Typography variant="body1" gutterBottom>
               Estado: {plotData.state}
