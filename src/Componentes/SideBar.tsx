@@ -64,7 +64,7 @@ export default function SideBar(props: any) {
           zIndex: 1050,
           left: 0,
           height: props.open ? "100%" : "0px",
-          width: props.open ? "256px" : "0px",
+          width: props.open ? "300px" : "0px",
           overflowY: 'auto'
         }}
       >

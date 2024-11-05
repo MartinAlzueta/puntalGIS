@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Box
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SquareIcon from "@mui/icons-material/Square";
@@ -23,7 +24,7 @@ const traduccion = {
   diseases: "Enfermedades",
   general: "Condición general",
   adversities: "Adversidades",
-  implementation_quality: "Calidad de implantación",
+  implementation_quality: "Implantación",
   id: "ID de la recorrida",
   date_time: "Fecha",
   harvest_quality: "Calidad de la cosecha",
@@ -57,8 +58,6 @@ export default function DisplayInfos() {
   const appContext = useContext(AppContext) as any;
   const plotData = appContext.selectedFeature?.properties;
 
-  console.log(plotData);
-
   const parseJSON = (str) => {
     try {
       return JSON.parse(str);
@@ -84,20 +83,14 @@ export default function DisplayInfos() {
       >
         {plotData && (
           <div>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="body1" >
               {plotData.plot_name}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Id del lote: {plotData.plot_id}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
+
+            <Typography variant="body1" >
               Fecha de recorrida: {getDate(plotData.date_time)}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Estado: {plotData.state}
-            </Typography>
-
-            {Object.entries(plotData).map(([key, value]) => {
+            {Object.entries(plotData).map(([key]) => {
               // Skip the basic info fields (customize as needed)
               if (
                 ["plot_name", "plot_id", "id", "date_time", "state"].includes(
@@ -106,59 +99,43 @@ export default function DisplayInfos() {
               )
                 return null;
 
-              // Parse sub-object fields
-              const parsedValue = parseJSON(value);
-
+         
               return (
-                <Accordion key={key}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Grid container>
-                      <Grid item xs={9}>
-                        <Typography variant="body2">
-                          {traduccion[key]}
+                
+                <Grid container justifyContent="space-between" spacing={1} key={key}>
+                  
+                <Grid item xs={6}>
+                  <Typography variant="caption" >
+                    {traduccion[key]}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}> {/* Caja alineada a la derecha */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '6px',
+                      height: 22,
+                      borderRadius: '4px', // Bordes redondeados
+                      backgroundColor: parseJSON(plotData[key]).semaphore
+                        ? (key === "general" ? coloresGeneral : colores)[parseJSON(plotData[key]).semaphore]
+                        : (key === "general" ? "rgba(2, 68, 27, 0.7)" : "rgba(158, 158, 158, 0.7)"),
+                            
+                     // border: '1px solid black', 
+                    }}
+                  >
+                    <Typography variant="caption" sx={{ whiteSpace: "nowrap"}} >
+                    {parseJSON(plotData[key]).decision ?? "s/d"}
                         </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <SquareIcon
-                          sx={{
-                            color: parseJSON(plotData[key]).semaphore
-                              ? ( key === "general" ? coloresGeneral : colores)[parseJSON(plotData[key]).semaphore]
-                              : (key === "general" ? "rgba(2, 68, 27, 0.7)" :"rgba(158, 158, 158, 0.7)"),
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {parsedValue ? (
-                      <List dense>
-                        {Object.entries(parsedValue).map(
-                          ([subKey, subValue]) => (
-                            <ListItem key={subKey}>
-                              <ListItemText
-                                primary={traduccion[subKey]}
-                                secondary={
-                                  subValue !== null
-                                    ? subValue?.toString()
-                                    : "sin Datos"
-                                }
-                              />
-                            </ListItem>
-                          )
-                        )}
-                      </List>
-                    ) : (
-                      <Typography color="textSecondary">
-                        No data available
-                      </Typography>
-                    )}
-                  </AccordionDetails>
-                </Accordion>
+                  </Box>
+                </Grid>
+              </Grid>
               );
             })}
           </div>
         )}
-      </List>
+      </List> 
       <Button
         variant="outlined"
         onClick={() => appContext.setSelectedFeature(undefined)}
