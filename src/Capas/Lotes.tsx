@@ -1,11 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../contexto/DataContext";
 //import lotes from "./test/lotes_prueba.json";
-import {
-  useMap,
-  MlGeoJsonLayer,  
-  MlLayer,
-} from "@mapcomponents/react-maplibre";
+import { useMap, MlGeoJsonLayer, MlLayer } from "@mapcomponents/react-maplibre";
 import createGeojson, { campoType } from "../../utils/createGeojson";
 import {
   bbox,
@@ -13,7 +9,6 @@ import {
   GeometryCollection,
   Properties,
 } from "@turf/turf";
-import DisplayInfos from "../Componentes/DisplayInfo";
 import { validQueryParams } from "../utils/utils.js";
 import { AppContext } from "../contexto/AppContext";
 
@@ -23,8 +18,6 @@ interface queryParamsType {
   scout_id?: number;
   plot_id?: number;
 }
-
-
 
 export default function Lotes() {
   const mapHook = useMap();
@@ -37,7 +30,11 @@ export default function Lotes() {
   const [geojson, setGeoJson] = useState<any>();
 
   const fillColor = () => {
-    if (appcontext.semaforo && appcontext.semaforo != "ninguno" && appcontext.semaforo != "general") {
+    if (
+      appcontext.semaforo &&
+      appcontext.semaforo != "ninguno" &&
+      appcontext.semaforo != "general"
+    ) {
       return [
         "match",
         ["get", "semaphore", ["get", appcontext.semaforo]],
@@ -77,7 +74,6 @@ export default function Lotes() {
     }
   };
 
-  
   const getQueryParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const params: queryParamsType = {};
@@ -118,42 +114,41 @@ export default function Lotes() {
     }
   }, [mapHook.map, filteredGeojson]);
 
-// quitar filtros si se deselecciona un lote
+  // quitar filtros si se deselecciona un lote
 
-useEffect(()=>{
-    !appcontext.selectedFeature && setFilteredGeojson(undefined)
-}, [
-    appcontext.selectedFeature
-])
+  useEffect(() => {
+    !appcontext.selectedFeature && setFilteredGeojson(undefined);
+  }, [appcontext.selectedFeature]);
 
-
-  //filtrar Lotes
+  //filtrar Lotes segun el semaforo
 
   useEffect(() => {
     const lote = appcontext.loteSeleccionado;
+    
+    switch (lote) {
+      case 0: //todos los lotes
+         setFilteredGeojson(undefined);
+        break;
 
-    if (lote === 0) {
-      setFilteredGeojson(undefined);
-    } else {
-      if (lote === -1) {
-        typeof geojson !== "undefined" &&
-          setFilteredGeojson(() => {
-            return {
-              ...geojson,
-              features: geojson?.features,
-            };
-          });
-      } else {
-        typeof geojson !== "undefined" &&
-          setFilteredGeojson(() => {
-            return {
-              ...geojson,
-              features: geojson?.features?.filter(
-                (el) => el.properties?.plot_id == lote
-              ),
-            };
-          });
-      }
+      case -1:
+        if (typeof geojson !== "undefined") {
+          setFilteredGeojson(() => ({
+            ...geojson,
+            features: geojson.features,
+          }));
+        }
+        break;
+
+      default:
+        if (typeof geojson !== "undefined") {
+          setFilteredGeojson(() => ({
+            ...geojson,
+            features: geojson.features?.filter(
+              (el) => el.properties?.plot_id == lote
+            ),
+          }));
+        }
+        break;
     }
   }, [appcontext.loteSeleccionado, geojson]);
 
@@ -163,7 +158,38 @@ useEffect(()=>{
     }
   };
 
-  
+  //filtrar lotes segun la decision
+  useEffect(() => {
+if(appcontext.decision !== "Todas"){
+
+    const filteredFeatures = (filteredGeojson ?? geojson).features?.filter((el) => {
+        // Get all keys in `properties`
+        return Object.keys(el.properties || {}).some((key) => {
+          // Check if the property has a `decision` and if it matches `appContext.decision`
+
+        const decision = el.properties[key]?.decision
+        ?.replace(/\n/g, "") // Replace newline characters with a space
+        .replace("  ", " "); // Trim any extra whitespace           
+
+      // Compare the normalized decision to `appContext.decision`
+      return decision === appcontext.decision;
+        });
+      })
+
+      if(filteredFeatures.length > 0){       
+         setFilteredGeojson(()=>({...(filteredGeojson ?? geojson), 
+        features: filteredFeatures
+    }))
+      }else{
+        appcontext.setDecision("Todas")
+        appcontext.setLoteSeleccionado(-1)
+      }
+
+    
+}
+       
+}, [appcontext.decision, geojson]);
+
   //Read query parameters
   useEffect(() => {
     const params: queryParamsType = getQueryParams();
@@ -190,22 +216,25 @@ useEffect(()=>{
             : (geojson as FeatureCollection<GeometryCollection, Properties>)
         }
         layerId="data_layer"
-        options={{paint:{
-          "fill-color": fillColor() as string,
-          "fill-outline-color":
-            appcontext.loteSeleccionado == -1
-              ? "blue"
-              : "black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/,
-        } }}       
+        options={{
+          paint: {
+            "fill-color": fillColor() as string,
+            "fill-outline-color":
+              appcontext.loteSeleccionado == -1
+                ? "blue"
+                : "black" /*, "fill-outline-color": borderColor() as string , "fill-opacity": opacity() as string*/,
+          },
+        }}
         onClick={(ev: any) => {
-            if(ev.features[0].properties.plot_id == appcontext.loteSeleccionado){
-                appcontext.setSelectedFeature(undefined);
-                appcontext.setLoteSeleccionado(-1); 
-            }else{
-                appcontext.setSelectedFeature(ev.features[0]);
-          appcontext.setLoteSeleccionado(ev.features[0].properties.plot_id); 
-            }
-         
+          if (
+            ev.features[0].properties.plot_id == appcontext.loteSeleccionado
+          ) {
+            appcontext.setSelectedFeature(undefined);
+            appcontext.setLoteSeleccionado(-1);
+          } else {
+            appcontext.setSelectedFeature(ev.features[0]);
+            appcontext.setLoteSeleccionado(ev.features[0].properties.plot_id);
+          }
         }}
       />
 
