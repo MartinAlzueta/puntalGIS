@@ -33,48 +33,88 @@ const semaforos = [
   { label: "Adversidades", field: "adversities", icon: <AcUnitIcon /> },
 ];
 
+const decision = [ "Todas", "Sin datos", " No intervenir", "Revisar en 3-7 días", "Intervenir"];
+
 export default function Tools() {
   const appContext = useContext(AppContext) as any;
   const dataContext = useContext(DataContext) as any;
 
   useEffect(() => {
     appContext.setSemaforo(semaforos[0].field);
-    appContext.set;
+    appContext.setDecision(decision[0]);
   }, []);
   return (
     <>
-      <InputLabel>Lote: </InputLabel>
-      <Select
-        id="plot_name"
-        label="lote"
-        value={appContext.loteSeleccionado}
-        onChange={(ev) =>
-          appContext.setLoteSeleccionado(ev.target.value as number)
-        }
-        fullWidth
-      >
-        {dataContext.campo &&
-          dataContext.lotesList.map((el) => (
-            <MenuItem key={el.id} value={el.id}>
-              {el.name}
-            </MenuItem>
-          ))}
-      </Select>
+      <Grid container alignItems="center" paddingBlockEnd={3}>
+        <Grid item xs={12}>        
+          <InputLabel>Lote: </InputLabel>
+        </Grid>
+        <Grid item xs={12}>
+          <Select
+            id="plot_name"
+            label="lote"
+            value={appContext.loteSeleccionado}
+            onChange={(ev) =>
+              appContext.setLoteSeleccionado(ev.target.value as number)
+            }
+            fullWidth
+          >
+            {dataContext.campo &&
+              dataContext.lotesList.map((el) => (
+                <MenuItem key={el.id} value={el.id}>
+                  {el.name}
+                </MenuItem>
+              ))}
+          </Select>
+        </Grid>
+      </Grid>
 
-      <InputLabel>Semaforos: </InputLabel>
-      {semaforos.map((el) => {
-        return (
-          <Tooltip title={el.label}>
-            <IconButton
-              onClick={() => appContext.setSemaforo(el.field)}
-              color={appContext.semaforo === el.field ? "primary" : "secondary"}
-              size="large"
-            >
-              {el.icon}
-            </IconButton>
-          </Tooltip>
-        );
-      })}
+      <Grid container alignItems="center" paddingBlockEnd={3}>
+        <Grid item xs={12}>
+          <InputLabel>Semaforos: </InputLabel>
+        </Grid>
+        {semaforos.map((el) => {
+          return (
+            <Grid item xs={3}>
+              <Tooltip title={el.label}>
+                <IconButton
+                  onClick={() => appContext.setSemaforo(el.field)}
+                  color={
+                    appContext.semaforo === el.field ? "primary" : "secondary"
+                  }
+                  size="large"
+                >
+                  {el.icon}
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          );
+        })}
+      </Grid>
+
+      <Grid container alignItems="center" paddingBlockEnd={3}>
+        <Grid item xs={12}>
+          <InputLabel>Decisión: </InputLabel>
+        </Grid>
+
+        <Grid item xs={12}>
+        <Select
+            id="decision"
+            label="Decisión"
+            value={appContext.decision}
+            onChange={(ev) =>
+              appContext.setDecision(ev.target.value)
+            }
+            fullWidth
+          >
+            {decision.map((el) => (
+                <MenuItem key={el} value={el}>
+                  {el}
+                </MenuItem>
+              ))}
+          </Select>
+        </Grid>
+      </Grid>
 
       <Grid container alignItems="center">
         <Grid item xs={4}>

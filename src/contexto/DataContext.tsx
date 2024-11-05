@@ -45,7 +45,7 @@ const listarLotes = (lotes: any) => {
           id: el.id,
         });
      });        
-    array.push({ name: "todos", id: -1 });
+    array.push({ name: "Todos", id: -1 });
     return array;
   };
 
