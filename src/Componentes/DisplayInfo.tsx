@@ -104,12 +104,12 @@ export default function DisplayInfos() {
                 
                 <Grid container justifyContent="space-between" spacing={1} key={key}>
                   
-                <Grid item xs={6}>
+                <Grid item xs={6}  /* la mitad del espacio para el nombre del semaforo */ >
                   <Typography variant="caption" >
                     {traduccion[key]}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}> {/* Caja alineada a la derecha */}
+                <Grid item xs={6} /* la otra mitad para la caja con la decision */> 
                   <Box
                     sx={{
                       display: 'flex',
