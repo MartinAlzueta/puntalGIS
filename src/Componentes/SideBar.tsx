@@ -36,21 +36,7 @@ export default function SideBar(props: any) {
     onExpand: (expanded: boolean)=> !expanded && appContext.setSelectedFeature(undefined),
     expanded: !!appContext.selectedFeature,
     disabled: !appContext.selectedFeature,
-} , {
-    title: "Exportar mapa",
-    child: <ExportPDF
-    showForm={appContext.showPdfForm}
-    titulo={
-      appContext.loteSeleccionado !== -1
-        ? dataContext.lotesList.filter(
-            (lote) => lote.id == appContext.loteSeleccionado
-          )[0].name
-        : dataContext.campo?.features[0].properties.name
-    }
-  />,
-  icon: <PictureAsPdfIcon />,
-  onExpand: (expanded: boolean)=> appContext.setShowPdfForm(expanded)
-  }
+} 
 ];
 
   return (
@@ -77,8 +63,6 @@ export default function SideBar(props: any) {
                {item.child}
               </AccordionDetails>
             </Accordion>)
-        
-       
         }
       </AppBar>
     </>

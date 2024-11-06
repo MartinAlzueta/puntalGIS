@@ -76,7 +76,7 @@ export default function Tools() {
         {semaforos.map((el) => {
           return (
             <Grid item xs={3}>
-              <Tooltip title={el.label}>
+              <Tooltip title={el.label} key={el.field}>
                 <IconButton
                   onClick={() => appContext.setSemaforo(el.field)}
                   color={
