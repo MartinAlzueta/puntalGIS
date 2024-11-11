@@ -23,18 +23,16 @@ const translations = [
 ];
 
 export default function ExportPDF(props: exportPDFProps) {
-  const appContext = useContext(AppContext) as any;
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
         translations.forEach(({ id, originalText, newText }) => {
             const elementById = document.getElementById(id);
-
-            if (elementById && (elementById as HTMLElement).innerText === originalText) {
-                // Update the element if it matches the original text
+                // Select Labels
+            if (elementById && (elementById as HTMLElement).innerText === originalText) {                
                 (elementById as HTMLElement).innerText = newText;
             } else if (id === "orientation-portrait" || id === "orientation-landscape") {
-                // Special handling for radio button labels without IDs
+                // radio buttons
                 const radioLabel = Array.from(document.querySelectorAll(".MuiFormControlLabel-root .MuiTypography-root"))
                     .find((el) => (el as HTMLElement).innerText === originalText);
                 
@@ -42,7 +40,7 @@ export default function ExportPDF(props: exportPDFProps) {
                     (radioLabel as HTMLElement).innerText = newText;
                 }
             } else if (id === "create-pdf-button") {
-                // Handling for the button text
+                // button text
                 const buttonElement = Array.from(document.querySelectorAll('button'))
                     .find((btn) => (btn as HTMLElement).innerText.trim() === originalText);
                 
@@ -55,7 +53,7 @@ export default function ExportPDF(props: exportPDFProps) {
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-    return () => observer.disconnect(); // Cleanup observer on unmount
+    return () => observer.disconnect(); 
 }, []);
 
   return (
@@ -241,9 +239,7 @@ export default function ExportPDF(props: exportPDFProps) {
                     ? centerY - lineWidth / 2
                     : (pageWidth - lineWidth) / 2;
                   const y = startY + index * lineHeight;
-                  pdf.text(line, xValueToUse, y);
-                  console.log("Index: ", index);
-                  console.log("y : ", y);
+                  pdf.text(line, xValueToUse, y);               
                 });
 
                 //Set pdfs props
