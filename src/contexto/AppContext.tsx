@@ -11,6 +11,7 @@ const AppContextProvider = ({ children }) => {
   const [loteSeleccionado, setLoteSeleccionado] = useState<number>(-1);
   const [selectedFeature, setSelectedFeature] = useState<any>();
   const [showPdfForm, setShowPdfForm] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   const value = {
     showCampo,
@@ -25,6 +26,8 @@ const AppContextProvider = ({ children }) => {
     setSelectedFeature,
     showPdfForm,
     setShowPdfForm,
+    showFilters, 
+    setShowFilters
   };
 
   return <AppStateProvider value={value}>{children}</AppStateProvider>;

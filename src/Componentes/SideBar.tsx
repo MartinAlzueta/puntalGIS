@@ -26,7 +26,9 @@ export default function SideBar(props: any) {
   const menus = [{
     title: "Filtros",
     child: <Tools />,
-    icon: <FilterAltIcon /> 
+    icon: <FilterAltIcon /> ,
+    expanded: appContext.showFilters,
+    onExpand: (expanded: boolean)=> !expanded ? appContext.setShowFilters(false) : appContext.setShowFilters(true),
   }, {
     title: "Información del Lote",
     child:  appContext.selectedFeature ? (
@@ -36,21 +38,22 @@ export default function SideBar(props: any) {
     onExpand: (expanded: boolean)=> !expanded && appContext.setSelectedFeature(undefined),
     expanded: !!appContext.selectedFeature,
     disabled: !appContext.selectedFeature,
-} , {
-    title: "Exportar mapa",
-    child: <ExportPDF
-    showForm={appContext.showPdfForm}
-    titulo={
-      appContext.loteSeleccionado !== -1
-        ? dataContext.lotesList.filter(
-            (lote) => lote.id == appContext.loteSeleccionado
-          )[0].name
-        : dataContext.campo?.features[0].properties.name
-    }
-  />,
-  icon: <PictureAsPdfIcon />,
-  onExpand: (expanded: boolean)=> appContext.setShowPdfForm(expanded)
-  }
+ } ,
+// {
+//     title: "Exportar mapa",
+//     child: <ExportPDF
+//     showForm={appContext.showPdfForm}
+//     titulo={
+//       appContext.loteSeleccionado !== -1
+//         ? dataContext.lotesList.filter(
+//             (lote) => lote.id == appContext.loteSeleccionado
+//           )[0].name
+//         : dataContext.campo?.features[0].properties.name
+//     }
+//   />,
+//   icon: <PictureAsPdfIcon />,
+//   onExpand: (expanded: boolean)=> appContext.setShowPdfForm(expanded)
+//   }
 ];
 
   return (
