@@ -60,12 +60,12 @@ export default function ExportPDF(props: exportPDFProps) {
     <>
       <Drawer
           sx={{
-          width: 450,
+          width: 400,
           maxWidth: "50%",
           flexShrink: 0,
 
           "& .MuiDrawer-paper": {
-            width: 450,
+            width: 400,
             height: "auto",
             backgroundColor: "#ffff",          
             marginTop: "100px",
@@ -100,6 +100,8 @@ export default function ExportPDF(props: exportPDFProps) {
                     label="Agregar descripción"
                     variant="outlined"
                     multiline
+                    rows={4}
+ 
                     sx={{ width: "100%" }}
                   />
                 </>
