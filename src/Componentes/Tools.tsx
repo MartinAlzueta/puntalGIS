@@ -70,12 +70,26 @@ export default function Tools() {
       </Grid>
 
       <Grid container alignItems="center" paddingBlockEnd={3}>
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           <InputLabel>Semaforos: </InputLabel>
         </Grid>
-        {semaforos.map((el) => {
+        <Grid item xs={2}>
+        <Tooltip title={semaforos.find((semaforo) => semaforo.field === "ninguno")?.label}>
+                <IconButton
+                  onClick={() => appContext.setSemaforo("ninguno")}
+                  color={
+                    appContext.semaforo === "ninguno" ? "primary" : "secondary"
+                  }
+                  size="large"
+                >
+                  {semaforos.find((semaforo) => semaforo.field === "ninguno")?.icon}
+                </IconButton>
+              </Tooltip>
+        </Grid>
+        {semaforos.filter((el) => el.field !== "ninguno") // Excluir el valor "ninguno"
+          .map((el) => {
           return (
-            <Grid item xs={3} key={el.label}>
+            <Grid item xs={2} key={el.label}>
               <Tooltip title={el.label}>
                 <IconButton
                   onClick={() => appContext.setSemaforo(el.field)}
