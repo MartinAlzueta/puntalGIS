@@ -38,6 +38,7 @@ export default function SideBar(props: any) {
     onExpand: (expanded: boolean)=> !expanded && appContext.setSelectedFeature(undefined),
     expanded: !!appContext.selectedFeature,
     disabled: !appContext.selectedFeature,
+<<<<<<< HEAD
  } ,
 // {
 //     title: "Exportar mapa",
@@ -54,6 +55,9 @@ export default function SideBar(props: any) {
 //   icon: <PictureAsPdfIcon />,
 //   onExpand: (expanded: boolean)=> appContext.setShowPdfForm(expanded)
 //   }
+=======
+} 
+>>>>>>> 41cbaed3712e0c28fcd9ebb1e433327188d3b96e
 ];
 
   return (
@@ -80,8 +84,6 @@ export default function SideBar(props: any) {
                {item.child}
               </AccordionDetails>
             </Accordion>)
-        
-       
         }
       </AppBar>
     </>
