@@ -4,7 +4,7 @@ import Lotes from "./Capas/Lotes";
 import Fondo from "./Capas/Fondo";
 import Campo from "./Capas/Campo";
 import TopBar from "./Componentes/TopBar";
-import Referencias from "./Capas/GeometryVectorTileLayer";
+import Referencias from "./Capas/Referencias";
 import { useEffect } from "react";
 
 function App() {
