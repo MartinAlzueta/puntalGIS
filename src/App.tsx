@@ -23,7 +23,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiIconButton: {
+/*    MuiIconButton: {
       styleOverrides: {
         root: {
           color: "#475A3C", // Color del icono
@@ -38,13 +38,35 @@ const theme = createTheme({
           },
         },
       },
-    },
+    },*/
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#475A3C', // Color base del icono
+          '&:hover': {
+            color: '#1f3115', // Color en hover para IconButton
+          },
+        },
+        colorPrimary: {
+          color: '#e57d48', // Color primary del icono
+          '&:hover': {
+            color: '#e57d48', // Color en hover en estado primary
+          },
+        },
+        colorSecondary: {
+          color: '#475A3C', // Usa el color secondary del tema
+          '&:hover': {
+            color: '#1f3115', // Color en hover para el estado secondary
+          },
+        },
+      },
+    },    
     MuiRadio: {
       styleOverrides: {
         root: {
           color: "#ddd", // Color del botón de radio cuando no está seleccionado
           "&.Mui-checked": {
-            color: "orangered", // Color del botón de radio cuando está seleccionado
+            color: "#1f3115", // Color del botón de radio cuando está seleccionado
           },
         },
       },
@@ -60,7 +82,7 @@ const theme = createTheme({
           },
         },
         track: {
-          opacity: 0.2, // Transparencia de la pista (track)
+          opacity: 0.2, 
           backgroundColor: "#738767", // Color de la pista cuando está apagado
           ".Mui-checked + &": {
             opacity: 1,
