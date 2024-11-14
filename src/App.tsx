@@ -7,6 +7,71 @@ import TopBar from "./Componentes/TopBar";
 import Referencias from "./Capas/Referencias";
 import { useEffect } from "react";
 
+
+import { createTheme, ThemeProvider, Button } from "@mui/material";
+
+const theme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: "#fff", // Color del texto del botón
+          backgroundColor: "#475A3C", // Color de fondo del botón
+          "&:hover": {
+            backgroundColor: "#738767", // Color en hover
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: "#475A3C", // Color del icono
+          "&:hover": {
+            color: "#1f3115", // Color en hover para IconButton
+          },
+        },
+        colorPrimary: {
+          color: "#475A3C", // Color del icono en estado primary
+          "&:hover": {
+            color: "#1f3115", // Color en hover en estado primary
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: "#ddd", // Color del botón de radio cuando no está seleccionado
+          "&.Mui-checked": {
+            color: "orangered", // Color del botón de radio cuando está seleccionado
+          },
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        switchBase: {
+          color: "#738767", // Color del interruptor cuando está apagado
+        },
+        colorPrimary: {
+          "&.Mui-checked": {
+            color: "#1f3115", // Color del interruptor cuando está encendido
+          },
+        },
+        track: {
+          opacity: 0.2, // Transparencia de la pista (track)
+          backgroundColor: "#738767", // Color de la pista cuando está apagado
+          ".Mui-checked + &": {
+            opacity: 1,
+            backgroundColor: "#1f3115", // Color de la pista cuando está encendido
+          },
+        },
+      },
+    },
+  },
+});
+
 function App() {
 
   return (
@@ -26,13 +91,13 @@ function App() {
           overflow: "hidden",
         }}
       />
-      
+      <ThemeProvider theme={theme}>
       <TopBar />
       <Fondo /> 
       <Lotes />
       <Campo />
       <Referencias />
-     
+      </ThemeProvider>
     </>
   );
 }

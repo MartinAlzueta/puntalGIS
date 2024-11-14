@@ -14,6 +14,7 @@ const translations = [
   { id: "scale-select-label", originalText: "Scale", newText: "Escala" },
   { id: "format-select-label", originalText: "Format", newText: "Formato" },
   { id: "orientation-portrait", originalText: "Portrait", newText: "Vertical" },
+  { id: "orientation-radio-buttons-group-label", originalText: "Orientation", newText: "Orientación" },
   {
     id: "orientation-landscape",
     originalText: "Landscape",
@@ -68,10 +69,14 @@ export default function ExportPDF(props: exportPDFProps) {
             width: 400,
             height: "auto",
             backgroundColor: "#ffff",          
-            marginTop: "100px",
+            marginTop: "60px",
             right: "50px",
             padding: "20px"
           },
+
+          "& #orientation-radio-buttons-group-label": {
+            color: "grey"
+          }
         }}
         variant="persistent"
         anchor="right"
@@ -181,7 +186,7 @@ export default function ExportPDF(props: exportPDFProps) {
                 textChunksSeperator.forEach((chunk: string) => {
                   const limitChunks: RegExpMatchArray | null =
                     chunk.match(/.{1,34}/g);
-                  console.log("Limit Chunks:", limitChunks);
+                //  console.log("Limit Chunks:", limitChunks);
                   if (limitChunks) {
                     textChunks.push(...limitChunks);
                   }
