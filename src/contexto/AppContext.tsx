@@ -8,6 +8,7 @@ const AppContextProvider = ({ children }) => {
   const [showCampo, setShowCampo] = useState(true);
   const [showReferencias, setShowReferencias] = useState(true);
   const [showTerciarias, setShowTerciarias] = useState(true);
+  const [showSatelite, setShowSatelite] = useState(true);
   const [semaforo, setSemaforo] = useState<string>();
   const [decision, setDecision] = useState<string>("Todas");
   const [loteSeleccionado, setLoteSeleccionado] = useState<number>(-1);
@@ -22,6 +23,8 @@ const AppContextProvider = ({ children }) => {
     setShowReferencias,
     showTerciarias,
     setShowTerciarias,
+    showSatelite,
+    setShowSatelite,
     semaforo,
     setSemaforo,
     decision,

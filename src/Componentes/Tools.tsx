@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   InputLabel,
   Grid,
@@ -7,6 +7,8 @@ import {
   Select,
   Switch,
   Tooltip,
+  Typography,
+  Box
 } from "@mui/material";
 import { AppContext } from "../contexto/AppContext";
 import { DataContext } from "../contexto/DataContext";
@@ -18,6 +20,9 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
+
+import Down from "@mui/icons-material/KeyboardArrowDown";
+import Up from "@mui/icons-material/KeyboardArrowUp";
 
 const semaforos = [
   { label: "Ninguno", field: "ninguno", icon: <DoNotDisturbIcon /> },
@@ -33,11 +38,19 @@ const semaforos = [
   { label: "Adversidades", field: "adversities", icon: <AcUnitIcon /> },
 ];
 
-const decision = [ "Todas", "Sin datos", " No intervenir", "Revisar en 3-7 días", "Intervenir"];
+const decision = [
+  "Todas",
+  "Sin datos",
+  " No intervenir",
+  "Revisar en 3-7 días",
+  "Intervenir",
+];
 
 export default function Tools() {
   const appContext = useContext(AppContext) as any;
   const dataContext = useContext(DataContext) as any;
+
+  const [masOpciones, setMasOpciones] = useState(false);
 
   useEffect(() => {
     appContext.setSemaforo(semaforos[0].field);
@@ -46,7 +59,7 @@ export default function Tools() {
   return (
     <>
       <Grid container alignItems="center" paddingBlockEnd={3}>
-        <Grid item xs={12}>        
+        <Grid item xs={12}>
           <InputLabel>Lote: </InputLabel>
         </Grid>
         <Grid item xs={12}>
@@ -98,55 +111,87 @@ export default function Tools() {
         </Grid>
 
         <Grid item xs={12}>
-        <Select
+          <Select
             id="decision"
             label="Decisión"
             value={appContext.decision}
-            onChange={(ev) =>
-              appContext.setDecision(ev.target.value)
-            }
+            onChange={(ev) => appContext.setDecision(ev.target.value)}
             fullWidth
           >
             {decision.map((el) => (
-                <MenuItem key={el} value={el}>
-                  {el}
-                </MenuItem>
-              ))}
+              <MenuItem key={el} value={el}>
+                {el}
+              </MenuItem>
+            ))}
           </Select>
         </Grid>
       </Grid>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      {!masOpciones ? (
+        <>
+          <Typography> Más opciones </Typography><IconButton onClick={() => setMasOpciones(true)}>
+            <Down />
+          </IconButton>
+        </>
+      ) : (
+        <>
+          <Typography> Menos opciones </Typography><IconButton onClick={() => setMasOpciones(false)}>           
+            <Up />
+          </IconButton>
+        </>
+      )}
+      </Box>
+      {masOpciones && (
+        <Grid container alignItems="center">
+          <Grid item xs={10}>
+            <InputLabel>Ver campo: </InputLabel>
+          </Grid>
+          <Grid item xs={2}>
+            <Switch
+              checked={appContext.showCampo}
+              onChange={() => appContext.setShowCampo(!appContext.showCampo)}
+            />
+          </Grid>
 
-      <Grid container alignItems="center">
-        <Grid item xs={10}>
-          <InputLabel>Ver campo: </InputLabel>
-        </Grid>
-        <Grid item xs={2}>
-          <Switch
-            checked={appContext.showCampo}
-            onChange={() => appContext.setShowCampo(!appContext.showCampo)}
-          />
-        </Grid>
-        <Grid item xs={10}>
-          <InputLabel>Referencias geográficas: </InputLabel>
-        </Grid>
-        <Grid item xs={2}>
-          <Switch
-            checked={appContext.showReferencias}
-            onChange={() => appContext.setShowReferencias(!appContext.showReferencias)}
-          />
-        </Grid>
+          <Grid item xs={10}>
+            <InputLabel>Satélite: </InputLabel>
+          </Grid>
 
-        <Grid item xs={10}>
-          <InputLabel>Ver red vial terciaria: </InputLabel>
+          <Grid item xs={2}>
+            <Switch
+              checked={appContext.showSatelite}
+              onChange={() =>
+                appContext.setShowSatelite(!appContext.showSatelite)
+              }
+            />
+          </Grid>
+
+          <Grid item xs={10}>
+            <InputLabel>Referencias geográficas: </InputLabel>
+          </Grid>
+          <Grid item xs={2}>
+            <Switch
+              checked={appContext.showReferencias}
+              onChange={() =>
+                appContext.setShowReferencias(!appContext.showReferencias)
+              }
+            />
+          </Grid>
+
+          <Grid item xs={10}>
+            <InputLabel>Red vial terciaria: </InputLabel>
+          </Grid>
+
+          <Grid item xs={2}>
+            <Switch
+              checked={appContext.showTerciarias}
+              onChange={() =>
+                appContext.setShowTerciarias(!appContext.showTerciarias)
+              }
+            />
+          </Grid>
         </Grid>
-     
-        <Grid item xs={2}>
-          <Switch
-            checked={appContext.showTerciarias}
-            onChange={() => appContext.setShowTerciarias(!appContext.showTerciarias)}
-          />
-        </Grid>
-      </Grid>
+      )}
     </>
   );
 }
