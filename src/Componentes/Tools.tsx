@@ -117,13 +117,33 @@ export default function Tools() {
       </Grid>
 
       <Grid container alignItems="center">
-        <Grid item xs={4}>
+        <Grid item xs={10}>
           <InputLabel>Ver campo: </InputLabel>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={2}>
           <Switch
             checked={appContext.showCampo}
             onChange={() => appContext.setShowCampo(!appContext.showCampo)}
+          />
+        </Grid>
+        <Grid item xs={10}>
+          <InputLabel>Referencias geográficas: </InputLabel>
+        </Grid>
+        <Grid item xs={2}>
+          <Switch
+            checked={appContext.showReferencias}
+            onChange={() => appContext.setShowReferencias(!appContext.showReferencias)}
+          />
+        </Grid>
+
+        <Grid item xs={10}>
+          <InputLabel>Ver red vial terciaria: </InputLabel>
+        </Grid>
+     
+        <Grid item xs={2}>
+          <Switch
+            checked={appContext.showTerciarias}
+            onChange={() => appContext.setShowTerciarias(!appContext.showTerciarias)}
           />
         </Grid>
       </Grid>

@@ -16,6 +16,7 @@ function App() {
           //style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
           zoom: 6,
           center: [-60.039202, -34.87202],
+          attributionControl: {compact: true, customAttribution: " Red vial terciaria: IGN | Satélite: Mapbox.com | MapComponents.org | MapLibre | OpenStreetMaps "}
         }}
         style={{
           position: "absolute",
