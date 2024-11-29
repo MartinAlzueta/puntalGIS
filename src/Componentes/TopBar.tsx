@@ -42,7 +42,7 @@ export default function TopBar() {
           >
             Puntal Agro
           </Typography>
-          <IconButton size="large" sx={{color: appContext.showPdfForm ? "#1976d2" : "#ffff", backgroundColor:"grey", ml: "auto"}} onClick={()=> appContext.setShowPdfForm(!appContext.showPdfForm)}>
+          <IconButton size="large" sx={{color: appContext.showPdfForm ? "#1976d2" : "#ffff", backgroundColor:"#E57D48", ml: "auto"}} onClick={()=> appContext.setShowPdfForm(!appContext.showPdfForm)}>
           <PictureAsPdfIcon />
         </IconButton>
         </Toolbar>

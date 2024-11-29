@@ -94,8 +94,10 @@ export default function Tools() {
                   onClick={() => appContext.setSemaforo(el.field)}
                   color={
                     appContext.semaforo === el.field ? "primary" : "secondary"
+                    
                   }
                   size="large"
+                  sx={{color: appContext.semaforo === el.field ? "#e57d48":  "black"}}
                 >
                   {el.icon}
                 </IconButton>
